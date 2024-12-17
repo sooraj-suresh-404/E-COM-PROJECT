@@ -1,14 +1,40 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom"; // Link for navigation
+import React, { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom'; // Import Link for redirection
+import axios from 'axios';
 
-const LoginPage = () => {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+const LoginPage = ({ setIsLoggedIn }) => {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+    const navigate = useNavigate();
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        // Logic to handle login (authentication etc.)
-        console.log("Logged in with:", email, password);
+        setError('');
+
+        try {
+            // Fetch user data from the JSON Server
+            const response = await axios.get('http://localhost:5001/users');
+            const users = response.data;
+
+            // Check if email and password match any user
+            const user = users.find(u => u.email === email && u.password === password);
+
+            if (user) {
+                // Successful login
+                setIsLoggedIn(true);
+                localStorage.setItem('user', JSON.stringify({ email: user.email }));
+
+                // Redirect to the cart page
+                navigate('/cart');
+            } else {
+                // Invalid credentials
+                setError('Invalid email or password. Not a user?');
+            }
+        } catch (err) {
+            console.error('Error fetching users:', err);
+            setError('Server error. Please try again later.');
+        }
     };
 
     return (

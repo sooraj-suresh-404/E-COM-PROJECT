@@ -6,7 +6,6 @@ import ProductDisplay from '../../../components/ProductDisplay';
 function Home() {
   return (
     <div>
-       
         <CategorySection/>
         <ProductDisplay/>
     </div>

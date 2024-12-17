@@ -1,6 +1,7 @@
-[
+{
+    "products":[
     {
-        "id": 1,
+        "id": "1",
         "brand": "Apple",
         "model": "iPhone 15 Pro",
         "price": 1199,
@@ -13,12 +14,12 @@
             "battery": "3200mAh",
             "os": "iOS 17"
         },
-        "image": "https://example.com/iphone15pro.jpg"
+        "image": "https://cdn.dxomark.com/wp-content/uploads/medias/post-126771/Apple-iPhone-14-Pro_FINAL_featured-image-packshot-review-1.jpg"
     },
     {
-        "id": 2,
+        "id": "2",
         "brand": "Samsung",
-        "model": "Galaxy S23 Ultra",
+        "model": "Samsung Galaxy S23 Ultra",
         "price": 1399,
         "description": "6.8-inch QHD+ AMOLED display, Snapdragon 8 Gen 2, 200 MP quad-camera, S Pen.",
         "specifications": {
@@ -29,12 +30,12 @@
             "battery": "5000mAh",
             "os": "Android 13"
         },
-        "image": "https://example.com/galaxys23ultra.jpg"
+        "image": "https://m.media-amazon.com/images/I/81vxWpPpgNL.jpg"
     },
     {
-        "id": 3,
+        "id": "3",
         "brand": "OnePlus",
-        "model": "11 Pro",
+        "model": "OnePlus 11 Pro",
         "price": 899,
         "description": "6.7-inch Fluid AMOLED, Snapdragon 8 Gen 2, Hasselblad triple camera setup.",
         "specifications": {
@@ -45,12 +46,12 @@
             "battery": "5000mAh",
             "os": "Android 13"
         },
-        "image": "https://example.com/oneplus11pro.jpg"
+        "image": "https://oasis.opstatics.com/content/dam/oasis/page/2023/na/oneplus-11/specs/green-img.png"
     },
     {
-        "id": 4,
+        "id": "4",
         "brand": "Google",
-        "model": "Pixel 8 Pro",
+        "model": "Google Pixel 8 Pro",
         "price": 999,
         "description": "6.7-inch OLED, Tensor G3 chip, 50 MP triple-camera, AI-powered photography.",
         "specifications": {
@@ -61,12 +62,12 @@
             "battery": "4900mAh",
             "os": "Android 14"
         },
-        "image": "https://example.com/pixel8pro.jpg"
+        "image": "https://cdn.dxomark.com/wp-content/uploads/medias/post-157488/Google-Pixel-8-Pro-featured-image-packshot-review.jpg"
     },
     {
-        "id": 5,
+        "id": "5",
         "brand": "Xiaomi",
-        "model": "Mi 13 Ultra",
+        "model": "Xiaomi Mi 13 Ultra",
         "price": 849,
         "description": "6.73-inch AMOLED, Snapdragon 8 Gen 2, Leica quad-camera setup.",
         "specifications": {
@@ -77,28 +78,12 @@
             "battery": "5000mAh",
             "os": "MIUI 14 (Android 13)"
         },
-        "image": "https://example.com/mi13ultra.jpg"
+        "image": "https://cdn.dxomark.com/wp-content/uploads/medias/post-149039/Xiaomi-13-Ultra_featured-image-packshot-review.jpg"
     },
     {
-        "id": 6,
-        "brand": "Realme",
-        "model": "GT 3",
-        "price": 699,
-        "description": "6.74-inch AMOLED, Snapdragon 8+ Gen 1, 240W fast charging.",
-        "specifications": {
-            "display": "6.74-inch AMOLED",
-            "processor": "Snapdragon 8+ Gen 1",
-            "ram": "8GB/12GB",
-            "storage": "128GB/256GB",
-            "battery": "4600mAh",
-            "os": "Realme UI (Android 13)"
-        },
-        "image": "https://example.com/realmegt3.jpg"
-    },
-    {
-        "id": 7,
+        "id": "7",
         "brand": "Vivo",
-        "model": "X90 Pro",
+        "model": "Vivo X90 Pro",
         "price": 999,
         "description": "6.78-inch AMOLED, Dimensity 9200, Zeiss 1-inch camera sensor.",
         "specifications": {
@@ -109,12 +94,12 @@
             "battery": "4870mAh",
             "os": "Funtouch OS (Android 13)"
         },
-        "image": "https://example.com/vivox90pro.jpg"
+        "image": "https://cdn.dxomark.com/wp-content/uploads/medias/post-136691/Vivo-X90-Pro_featured-image-packshot-review.jpg"
     },
     {
-        "id": 8,
+        "id": "8",
         "brand": "Oppo",
-        "model": "Find X6 Pro",
+        "model": "Oppo Find X6 Pro",
         "price": 1099,
         "description": "6.82-inch AMOLED, Snapdragon 8 Gen 2, Hasselblad triple-camera.",
         "specifications": {
@@ -125,12 +110,12 @@
             "battery": "5000mAh",
             "os": "ColorOS 13 (Android 13)"
         },
-        "image": "https://example.com/oppo_findx6pro.jpg"
+        "image": "https://cdn.dxomark.com/wp-content/uploads/medias/post-145608/Oppo-Find-X6-Pro_featured-image-packshot-review.jpg"
     },
     {
-        "id": 9,
+        "id": "9",
         "brand": "Motorola",
-        "model": "Edge 40 Pro",
+        "model": "Motorola Edge 40 Pro",
         "price": 799,
         "description": "6.67-inch pOLED, Snapdragon 8 Gen 2, 125W fast charging.",
         "specifications": {
@@ -141,12 +126,12 @@
             "battery": "4600mAh",
             "os": "Android 13"
         },
-        "image": "https://example.com/motorola_edge40pro.jpg"
+        "image": "https://cdn.dxomark.com/wp-content/uploads/medias/post-144720/Motorola-Edge-40-Pro_featured-image-packshot-review.jpg"
     },
     {
-        "id": 10,
+        "id": "10",
         "brand": "Asus",
-        "model": "ROG Phone 7",
+        "model": "Asus ROG Phone 7",
         "price": 1199,
         "description": "6.78-inch AMOLED, Snapdragon 8 Gen 2, Gaming-oriented features.",
         "specifications": {
@@ -157,12 +142,12 @@
             "battery": "6000mAh",
             "os": "Android 13"
         },
-        "image": "https://example.com/asus_rogphone7.jpg"
+        "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTMmdd7NV13nxRxM-HYK5SrKTcby3ZVgfTdQ&s"
     },
     {
-        "id": 11,
+        "id": "11",
         "brand": "Nothing",
-        "model": "Phone 2",
+        "model": "Nothing Phone 2",
         "price": 799,
         "description": "6.7-inch OLED, Snapdragon 8+ Gen 1, Glyph Interface for notifications.",
         "specifications": {
@@ -173,12 +158,12 @@
             "battery": "4700mAh",
             "os": "Nothing OS 2 (Android 13)"
         },
-        "image": "https://example.com/nothingphone2.jpg"
+        "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsxhrsiMlsfjnsXCsZhMmgRvivAngTO4BiUQ&s"
     },
     {
-        "id": 12,
+        "id": "12",
         "brand": "Poco",
-        "model": "F5 Pro",
+        "model": "Poco F5 Pro",
         "price": 599,
         "description": "6.67-inch AMOLED, Snapdragon 8+ Gen 1, High refresh rate.",
         "specifications": {
@@ -189,12 +174,12 @@
             "battery": "5160mAh",
             "os": "MIUI (Android 13)"
         },
-        "image": "https://example.com/pocof5pro.jpg"
+        "image": "https://cdn.dxomark.com/wp-content/uploads/medias/post-154144/POCO-F5-Pro.png"
     },
     {
-        "id": 13,
+        "id": "13",
         "brand": "Sony",
-        "model": "Xperia 1 V",
+        "model": "Sony Xperia 1 V",
         "price": 1399,
         "description": "6.5-inch 4K OLED, Snapdragon 8 Gen 2, Professional camera features.",
         "specifications": {
@@ -205,12 +190,12 @@
             "battery": "5000mAh",
             "os": "Android 13"
         },
-        "image": "https://example.com/sony_xperia1v.jpg"
+        "image": "https://www.91-img.com/gallery_images_uploads/f/6/f634a49efc4b4ed609fcffb2fd260cc765f5ee57.jpg?tr=h-630,c-at_max,q-80"
     },
     {
-        "id": 14,
+        "id": "14",
         "brand": "iQOO",
-        "model": "11 5G",
+        "model": "iQOO 11 5G",
         "price": 899,
         "description": "6.78-inch AMOLED, Snapdragon 8 Gen 2, V2 chip for gaming.",
         "specifications": {
@@ -221,12 +206,12 @@
             "battery": "5000mAh",
             "os": "Funtouch OS (Android 13)"
         },
-        "image": "https://example.com/iqoo11_5g.jpg"
+        "image": "https://i.gadgets360cdn.com/large/iqoo_11_5g_amazon_1673341036354.jpg"
     },
     {
-        "id": 15,
+        "id": "15",
         "brand": "Honor",
-        "model": "Magic 5 Pro",
+        "model": "Honor Magic 5 Pro",
         "price": 1099,
         "description": "6.81-inch OLED, Snapdragon 8 Gen 2, Advanced AI features.",
         "specifications": {
@@ -237,6 +222,8 @@
             "battery": "5100mAh",
             "os": "MagicOS (Android 13)"
         },
-        "image": "https://example.com/honor_magic5pro.jpg"
+        "image": "https://cdn.dxomark.com/wp-content/uploads/medias/post-140751/Honor-Magic5-Pro_featured-image-packshot-review.jpg"
     }
-]
+    ]
+
+}
