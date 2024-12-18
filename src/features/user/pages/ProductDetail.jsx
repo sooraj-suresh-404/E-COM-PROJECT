@@ -15,7 +15,7 @@ const ProductDetail = () => {
 
         // Fetch product details from API
         axios
-            .get(`http://localhost:5000/products/${id}`)
+            .get(`http://localhost:3000/products/${id}`)
             .then((response) => {
                 setProduct(response.data);  // Set product data to state
                 setLoading(false);  // Set loading to false when data is fetched
@@ -42,25 +42,33 @@ const ProductDetail = () => {
         return <div className="text-center">No product found.</div>;
     }
 
-    // Add to Cart functionality (with axios POST request)
-    const addToCart = async () => {
-        try {
-            // Send product data to the cart API
-            const response = await axios.post('http://localhost:5002/cart', {
+    // Add to Cart functionality with LocalStorage
+    const addToCart = () => {
+        // Retrieve cart from localStorage (or create a new one)
+        let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+        // Check if the product already exists in the cart
+        const existingProductIndex = cart.findIndex(item => item.id === product.id);
+
+        if (existingProductIndex !== -1) {
+            // If the product exists, increase the quantity
+            cart[existingProductIndex].quantity += 1;
+        } else {
+            // If the product is not in the cart, add it
+            cart.push({
                 id: product.id,
                 name: product.model,
                 price: product.price,
-                imageUrl: product.image,  // Make sure the image URL is included
-                quantity: 1  // You can dynamically set quantity based on user input if needed
+                imageUrl: product.image,
+                quantity: 1
             });
-
-            // Handle successful cart addition
-            console.log('Product added to cart:', response.data);
-            alert(`${product.model} has been added to your cart!`);
-        } catch (error) {
-            console.error('Error adding item to cart:', error);
-            alert('There was an error adding the product to the cart.');
         }
+
+        // Save the updated cart back to localStorage
+        localStorage.setItem("cart", JSON.stringify(cart));
+
+        // Show success message to the user
+        alert(`${product.model} has been added to your cart!`);
     };
 
     // Buy Now functionality (redirect to checkout)

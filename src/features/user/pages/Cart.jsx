@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Cart = () => {
     const [cartItems, setCartItems] = useState([]);
     const [total, setTotal] = useState(0);
+    const navigate = useNavigate();
 
+    // Fetch cart items on component mount
     useEffect(() => {
         const fetchCart = async () => {
             try {
@@ -18,14 +21,17 @@ const Cart = () => {
         fetchCart();
     }, []);
 
+    // Calculate the total amount of the cart
     const calculateTotal = (items) => {
         const totalAmount = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
         setTotal(totalAmount);
     };
 
+    // Handle item removal
     const handleRemoveItem = async (id) => {
         try {
-            await axios.delete(`http://localhost:5000/cart/${id}`);
+            await axios.delete(`http://localhost:5002/cart/${id}`);
+            // After removal, update the cart items in the state
             const updatedCart = cartItems.filter((item) => item.id !== id);
             setCartItems(updatedCart);
             calculateTotal(updatedCart);
@@ -34,14 +40,44 @@ const Cart = () => {
         }
     };
 
+    // Handle clear cart
     const handleClearCart = async () => {
         try {
-            await axios.delete("http://localhost:5000/cart"); // Clear all items
+            await axios.delete("http://localhost:5002/cart"); // Clear all items
             setCartItems([]);
             setTotal(0);
         } catch (error) {
             console.error("Error clearing cart:", error);
         }
+    };
+
+    // Handle quantity change (increase or decrease)
+    const handleQuantityChange = async (id, change) => {
+        const updatedCart = cartItems.map((item) => {
+            if (item.id === id) {
+                const updatedQuantity = item.quantity + change;
+                if (updatedQuantity > 0) {
+                    item.quantity = updatedQuantity;
+                }
+            }
+            return item;
+        });
+
+        setCartItems(updatedCart);
+        calculateTotal(updatedCart);
+
+        try {
+            await axios.put(`http://localhost:5002/cart/${id}`, {
+                quantity: updatedCart.find((item) => item.id === id).quantity,
+            });
+        } catch (error) {
+            console.error("Error updating quantity:", error);
+        }
+    };
+
+    // Proceed to checkout
+    const handleCheckout = () => {
+        navigate("/checkout", { state: { cartItems, total } });
     };
 
     return (
@@ -66,7 +102,21 @@ const Cart = () => {
                                 <div>
                                     <h3 className="font-semibold text-gray-800">{item.name}</h3>
                                     <p className="text-gray-500">${item.price}</p>
-                                    <p className="text-gray-500">Qty: {item.quantity}</p>
+                                    <div className="flex items-center space-x-2">
+                                        <button
+                                            onClick={() => handleQuantityChange(item.id, -1)}
+                                            className="text-xl font-bold text-gray-600"
+                                        >
+                                            -
+                                        </button>
+                                        <span className="text-lg">{item.quantity}</span>
+                                        <button
+                                            onClick={() => handleQuantityChange(item.id, 1)}
+                                            className="text-xl font-bold text-gray-600"
+                                        >
+                                            +
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                             <button
@@ -87,7 +137,10 @@ const Cart = () => {
                             >
                                 Clear Cart
                             </button>
-                            <button className="bg-green-500 text-white py-2 px-4 rounded-lg">
+                            <button
+                                onClick={handleCheckout}
+                                className="bg-green-500 text-white py-2 px-4 rounded-lg"
+                            >
                                 Checkout
                             </button>
                         </div>

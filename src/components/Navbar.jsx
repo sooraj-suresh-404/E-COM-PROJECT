@@ -1,9 +1,25 @@
-// src/components/Navbar.jsx
-import React from "react";
-
-
+import React, { useState, useEffect } from "react";
 
 const Navbar = () => {
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [cartCount, setCartCount] = useState(0);
+
+    useEffect(() => {
+        // Check if user is logged in from localStorage
+        const userStatus = localStorage.getItem("isLoggedIn");
+        setIsLoggedIn(userStatus === "true");
+
+        // Get cart count from localStorage
+        const cartItems = JSON.parse(localStorage.getItem("cart")) || [];
+        setCartCount(cartItems.length);
+    }, []);  // Empty dependency array to run only on mount
+
+    // Handle Logout
+    const handleLogout = () => {
+        localStorage.removeItem("isLoggedIn");
+        setIsLoggedIn(false);
+    };
+
     return (
         <header className="bg-blue-600 text-white shadow-md">
             <nav className="max-w-8xl mx-auto px-4 py-4 flex items-center justify-between">
@@ -40,50 +56,52 @@ const Navbar = () => {
                             />
                         </svg>
                         <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full text-xs w-5 h-5 flex items-center justify-center">
-                            0
+                            {cartCount}
                         </span>
                     </a>
 
-                    {/* Login Button */}
-                    <a
-                        href="/login"
-                        className="px-4 py-2 bg-blue-500 hover:bg-blue-400 rounded-lg transition"
-                    >
-                        Login
-                    </a>
-
-                    {/* Profile Dropdown */}
-                    <div className="relative group">
-                        <div className="cursor-pointer flex items-center space-x-2">
-                            <img
-                                src="   https://cdn-icons-png.flaticon.com/512/3177/3177440.png "
-                                alt="Profile"
-                                className="rounded-full w-8 h-8"
-                            />
-                            <span className="hidden sm:inline">Profile</span>
+                    {/* Login Button or Profile Icon */}
+                    {!isLoggedIn ? (
+                        <a
+                            href="/login"
+                            className="px-4 py-2 bg-blue-500 hover:bg-blue-400 rounded-lg transition"
+                        >
+                            Login
+                        </a>
+                    ) : (
+                        <div className="relative group">
+                            <div className="cursor-pointer flex items-center space-x-2">
+                                <img
+                                    src="https://cdn-icons-png.flaticon.com/512/3177/3177440.png"
+                                    alt="Profile"
+                                    className="rounded-full w-8 h-8"
+                                />
+                                <span className="hidden sm:inline">Profile</span>
+                            </div>
+                            {/* Dropdown Menu */}
+                            <div className="absolute right-0 mt-2 w-40 bg-white text-gray-700 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                                <a
+                                    href="/profile"
+                                    className="block px-4 py-2 hover:bg-gray-100"
+                                >
+                                    My Profile
+                                </a>
+                                <a
+                                    href="/orders"
+                                    className="block px-4 py-2 hover:bg-gray-100"
+                                >
+                                    My Orders
+                                </a>
+                                <a
+                                    href="/logout"
+                                    className="block px-4 py-2 text-red-500 hover:bg-gray-100"
+                                    onClick={handleLogout}
+                                >
+                                    Logout
+                                </a>
+                            </div>
                         </div>
-                        {/* Dropdown Menu */}
-                        <div className="absolute right-0 mt-2 w-40 bg-white text-gray-700 rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                            <a
-                                href="/profile"
-                                className="block px-4 py-2 hover:bg-gray-100"
-                            >
-                                My Profile
-                            </a>
-                            <a
-                                href="/orders"
-                                className="block px-4 py-2 hover:bg-gray-100"
-                            >
-                                My Orders
-                            </a>
-                            <a
-                                href="/logout"
-                                className="block px-4 py-2 text-red-500 hover:bg-gray-100"
-                            >
-                                Logout
-                            </a>
-                        </div>
-                    </div>
+                    )}
                 </div>
             </nav>
 

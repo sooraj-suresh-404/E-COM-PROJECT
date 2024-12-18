@@ -1,11 +1,3 @@
 {
-  "cart": [
-    {
-      "id": "1",
-      "name": "iPhone 15 Pro",
-      "price": 1199,
-      "imageUrl": "https://cdn.dxomark.com/wp-content/uploads/medias/post-126771/Apple-iPhone-14-Pro_FINAL_featured-image-packshot-review-1.jpg",
-      "quantity": 1
-    }
-  ]
+  "cart": []
 }
