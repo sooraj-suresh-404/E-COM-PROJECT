@@ -1,13 +1,10 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 
 const Cart = () => {
     const [cartItems, setCartItems] = useState([]);
     const [total, setTotal] = useState(0);
-    const navigate = useNavigate();
 
-    // Fetch cart items on component mount
     useEffect(() => {
         const fetchCart = async () => {
             try {
@@ -21,17 +18,14 @@ const Cart = () => {
         fetchCart();
     }, []);
 
-    // Calculate the total amount of the cart
     const calculateTotal = (items) => {
         const totalAmount = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
         setTotal(totalAmount);
     };
 
-    // Handle item removal
     const handleRemoveItem = async (id) => {
         try {
-            await axios.delete(`http://localhost:5002/cart/${id}`);
-            // After removal, update the cart items in the state
+            await axios.delete(`http://localhost:5000/cart/${id}`);
             const updatedCart = cartItems.filter((item) => item.id !== id);
             setCartItems(updatedCart);
             calculateTotal(updatedCart);
@@ -40,10 +34,9 @@ const Cart = () => {
         }
     };
 
-    // Handle clear cart
     const handleClearCart = async () => {
         try {
-            await axios.delete("http://localhost:5002/cart"); // Clear all items
+            await axios.delete("http://localhost:5000/cart"); // Clear all items
             setCartItems([]);
             setTotal(0);
         } catch (error) {
@@ -51,33 +44,48 @@ const Cart = () => {
         }
     };
 
-    // Handle quantity change (increase or decrease)
-    const handleQuantityChange = async (id, change) => {
-        const updatedCart = cartItems.map((item) => {
-            if (item.id === id) {
-                const updatedQuantity = item.quantity + change;
-                if (updatedQuantity > 0) {
-                    item.quantity = updatedQuantity;
-                }
-            }
-            return item;
-        });
-
-        setCartItems(updatedCart);
-        calculateTotal(updatedCart);
-
+    const handleIncreaseQty = async (id) => {
         try {
-            await axios.put(`http://localhost:5002/cart/${id}`, {
-                quantity: updatedCart.find((item) => item.id === id).quantity,
-            });
+            // Optimistically update the quantity
+            const updatedCart = cartItems.map(item =>
+                item.id === id ? { ...item, quantity: item.quantity + 1 } : item
+            );
+            setCartItems(updatedCart);
+            calculateTotal(updatedCart);
+
+            // Send updated quantity to the server
+            await axios.put(`http://localhost:5000/cart/${id}`, { quantity: updatedCart.find(item => item.id === id).quantity });
         } catch (error) {
-            console.error("Error updating quantity:", error);
+            console.error("Error increasing quantity:", error);
+            // If there is an error, revert the optimistic update
+            const updatedCart = cartItems.map(item =>
+                item.id === id ? { ...item, quantity: item.quantity - 1 } : item
+            );
+            setCartItems(updatedCart);
+            calculateTotal(updatedCart);
         }
     };
 
-    // Proceed to checkout
-    const handleCheckout = () => {
-        navigate("/checkout", { state: { cartItems, total } });
+    const handleDecreaseQty = async (id) => {
+        try {
+            // Prevent quantity from going below 1
+            const updatedCart = cartItems.map(item =>
+                item.id === id && item.quantity > 1 ? { ...item, quantity: item.quantity - 1 } : item
+            );
+            setCartItems(updatedCart);
+            calculateTotal(updatedCart);
+
+            // Send updated quantity to the server
+            await axios.put(`http://localhost:5000/cart/${id}`, { quantity: updatedCart.find(item => item.id === id).quantity });
+        } catch (error) {
+            console.error("Error decreasing quantity:", error);
+            // If there is an error, revert the optimistic update
+            const updatedCart = cartItems.map(item =>
+                item.id === id ? { ...item, quantity: item.quantity + 1 } : item
+            );
+            setCartItems(updatedCart);
+            calculateTotal(updatedCart);
+        }
     };
 
     return (
@@ -102,17 +110,17 @@ const Cart = () => {
                                 <div>
                                     <h3 className="font-semibold text-gray-800">{item.name}</h3>
                                     <p className="text-gray-500">${item.price}</p>
-                                    <div className="flex items-center space-x-2">
+                                    <div className="flex items-center space-x-4">
                                         <button
-                                            onClick={() => handleQuantityChange(item.id, -1)}
-                                            className="text-xl font-bold text-gray-600"
+                                            onClick={() => handleDecreaseQty(item.id)}
+                                            className="text-gray-500 hover:text-gray-700"
                                         >
                                             -
                                         </button>
-                                        <span className="text-lg">{item.quantity}</span>
+                                        <span className="text-gray-800">{item.quantity}</span>
                                         <button
-                                            onClick={() => handleQuantityChange(item.id, 1)}
-                                            className="text-xl font-bold text-gray-600"
+                                            onClick={() => handleIncreaseQty(item.id)}
+                                            className="text-gray-500 hover:text-gray-700"
                                         >
                                             +
                                         </button>
@@ -137,10 +145,7 @@ const Cart = () => {
                             >
                                 Clear Cart
                             </button>
-                            <button
-                                onClick={handleCheckout}
-                                className="bg-green-500 text-white py-2 px-4 rounded-lg"
-                            >
+                            <button className="bg-green-500 text-white py-2 px-4 rounded-lg">
                                 Checkout
                             </button>
                         </div>

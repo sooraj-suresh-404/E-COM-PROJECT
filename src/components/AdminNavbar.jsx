@@ -9,7 +9,7 @@ const AdminNavbar = () => (
         </div>
         <div className="flex flex-col-r gap-2 p-4 items-center justify-center">
             <Link 
-                to="/admin/dashboard" 
+                to="/admin" 
                 className="block px-4 py-2 rounded-md hover:bg-gray-700 transition duration-300">
                 Dashboard
             </Link>
@@ -26,7 +26,7 @@ const AdminNavbar = () => (
             <Link 
                 to="/admin/manage-orders" 
                 className="block px-4 py-2 rounded-md hover:bg-gray-700 transition duration-300">
-                Manage oders
+                Manage orders
             </Link>
             <Link 
                 to="/admin/reports" 
