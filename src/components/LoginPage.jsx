@@ -1,84 +1,98 @@
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom'; // Import Link for redirection
-import axios from 'axios';
+import axios from "axios";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useUser } from "../contexts/UserContext";
 
-const LoginPage = ({ setIsLoggedIn }) => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
-    const navigate = useNavigate();
+const LoginPage = () => {
+  const { handleLogin } = useUser();
+  const navigate = useNavigate();
+  const [form, setForm] = useState({ email: "", password: "" });
+  const [message, setMessage] = useState("");
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setError('');
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm({ ...form, [name]: value });
+  };
 
-        try {
-            // Fetch user data from the JSON Server
-            const response = await axios.get('http://localhost:5001/users');
-            const users = response.data;
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const { data } = await axios.get("http://localhost:3000/users", {
+        params: { email: form.email, password: form.password },
+      });
 
-            // Check if email and password match any user
-            const user = users.find(u => u.email === email && u.password === password);
+      if (data.length > 0) {
+        const userEmail = data[0].email;
+        const userName = data[0].name;
+        handleLogin(userEmail, userName);
+        navigate("/");
+      } else {
+        setMessage("Invalid email or password");
+      }
+    } catch (error) {
+      console.error("Login Error:", error);
+      setMessage("An error occurred. Please try again.");
+    }
+  };
 
-            if (user) {
-                // Successful login
-                setIsLoggedIn(true);
-                localStorage.setItem('user', JSON.stringify({ email: user.email }));
-
-                // Redirect to the cart page
-                navigate('/cart');
-            } else {
-                // Invalid credentials
-                setError('Invalid email or password. Not a user?');
-            }
-        } catch (err) {
-            console.error('Error fetching users:', err);
-            setError('Server error. Please try again later.');
-        }
-    };
-
-    return (
-        <div className="flex justify-center items-center min-h-screen bg-gray-100">
-            <div className="bg-white p-6 rounded-lg shadow-lg w-full sm:w-96">
-                <h2 className="text-2xl font-bold text-center mb-4">Login</h2>
-                <form onSubmit={handleSubmit}>
-                    <div className="mb-4">
-                        <label htmlFor="email" className="block text-gray-700">Email</label>
-                        <input
-                            type="email"
-                            id="email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            className="w-full p-2 border border-gray-300 rounded-md"
-                            placeholder="Enter your email"
-                            required
-                        />
-                    </div>
-                    <div className="mb-4">
-                        <label htmlFor="password" className="block text-gray-700">Password</label>
-                        <input
-                            type="password"
-                            id="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            className="w-full p-2 border border-gray-300 rounded-md"
-                            placeholder="Enter your password"
-                            required
-                        />
-                    </div>
-                    <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded-md mt-4 hover:bg-blue-600">
-                        Login
-                    </button>
-                </form>
-                <p className="mt-4 text-center text-gray-600">
-                    Don't have an account?{" "}
-                    <Link to="/signup" className="text-blue-500 hover:underline">
-                        Sign up here
-                    </Link>
-                </p>
-            </div>
-        </div>
-    );
+  return (
+    <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-gray-100 via-white to-gray-200">
+      <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-md">
+        <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">Login</h2>
+        <p className="text-center text-gray-600 mb-4">
+          Access your account to continue!
+        </p>
+        {message && <p className="text-center text-red-500 mb-4">{message}</p>}
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Email Section */}
+          <div>
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+              Email
+            </label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={form.email}
+              onChange={handleChange}
+              className="w-full px-4 py-3 mt-1 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="Enter your email"
+              required
+            />
+          </div>
+          {/* Password Section */}
+          <div>
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              Password
+            </label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              value={form.password}
+              onChange={handleChange}
+              className="w-full px-4 py-3 mt-1 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="Enter your password"
+              required
+            />
+          </div>
+          {/* Submit Button */}
+          <button
+            type="submit"
+            className="w-full py-3 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 focus:outline-none transition-all duration-200"
+          >
+            Login
+          </button>
+        </form>
+        <p className="mt-6 text-center text-gray-600">
+          Don't have an account?{" "}
+          <Link to="/signup" className="text-blue-500 hover:underline">
+            Sign up here
+          </Link>
+        </p>
+      </div>
+    </div>
+  );
 };
 
 export default LoginPage;

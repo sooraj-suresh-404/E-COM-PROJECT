@@ -1,159 +1,104 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React from "react";
+import { useCart } from "../../../contexts/CartContext";
+import { useNavigate } from "react-router-dom"; 
+import { useUser } from "../../../contexts/UserContext";
 
 const Cart = () => {
-    const [cartItems, setCartItems] = useState([]);
-    const [total, setTotal] = useState(0);
+  const { cart, removeFromCart, clearCart, updateQuantity, addToCart } = useCart();
+  const navigate = useNavigate();
+  const { email } = useUser();
 
-    useEffect(() => {
-        const fetchCart = async () => {
-            try {
-                const response = await axios.get("http://localhost:5002/cart");
-                setCartItems(response.data);
-                calculateTotal(response.data);
-            } catch (error) {
-                console.error("Error fetching cart data:", error);
-            }
-        };
-        fetchCart();
-    }, []);
+  const getTotalPrice = () =>
+    cart.reduce((total, item) => total + item.price * item.quantity, 0);
 
-    const calculateTotal = (items) => {
-        const totalAmount = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
-        setTotal(totalAmount);
-    };
+  const handleCheckout = () => {
+    navigate("/checkout");
+  };
 
-    const handleRemoveItem = async (id) => {
-        try {
-            await axios.delete(`http://localhost:5000/cart/${id}`);
-            const updatedCart = cartItems.filter((item) => item.id !== id);
-            setCartItems(updatedCart);
-            calculateTotal(updatedCart);
-        } catch (error) {
-            console.error("Error removing item:", error);
-        }
-    };
+  // Function to handle adding items to the cart
+  const handleAddToCart = (item) => {
+    // Check if the item already exists in the cart
+    const existingItem = cart.find(cartItem => cartItem.id === item.id);
+    if (existingItem) {
+      // If item exists, increase its quantity
+      updateQuantity(item.id, 1);
+    } else {
+      // If item doesn't exist, add it to the cart
+      addToCart(item);
+    }
+  };
 
-    const handleClearCart = async () => {
-        try {
-            await axios.delete("http://localhost:5000/cart"); // Clear all items
-            setCartItems([]);
-            setTotal(0);
-        } catch (error) {
-            console.error("Error clearing cart:", error);
-        }
-    };
+  if (!email) return <p className="text-center text-gray-500">Please log in to view your cart.</p>;
 
-    const handleIncreaseQty = async (id) => {
-        try {
-            // Optimistically update the quantity
-            const updatedCart = cartItems.map(item =>
-                item.id === id ? { ...item, quantity: item.quantity + 1 } : item
-            );
-            setCartItems(updatedCart);
-            calculateTotal(updatedCart);
+  return (
+    <div className="p-4 bg-gray-50 min-h-screen">
+      <h2 className="text-3xl font-semibold text-center text-gray-800 mb-6">Your Cart</h2>
 
-            // Send updated quantity to the server
-            await axios.put(`http://localhost:5000/cart/${id}`, { quantity: updatedCart.find(item => item.id === id).quantity });
-        } catch (error) {
-            console.error("Error increasing quantity:", error);
-            // If there is an error, revert the optimistic update
-            const updatedCart = cartItems.map(item =>
-                item.id === id ? { ...item, quantity: item.quantity - 1 } : item
-            );
-            setCartItems(updatedCart);
-            calculateTotal(updatedCart);
-        }
-    };
-
-    const handleDecreaseQty = async (id) => {
-        try {
-            // Prevent quantity from going below 1
-            const updatedCart = cartItems.map(item =>
-                item.id === id && item.quantity > 1 ? { ...item, quantity: item.quantity - 1 } : item
-            );
-            setCartItems(updatedCart);
-            calculateTotal(updatedCart);
-
-            // Send updated quantity to the server
-            await axios.put(`http://localhost:5000/cart/${id}`, { quantity: updatedCart.find(item => item.id === id).quantity });
-        } catch (error) {
-            console.error("Error decreasing quantity:", error);
-            // If there is an error, revert the optimistic update
-            const updatedCart = cartItems.map(item =>
-                item.id === id ? { ...item, quantity: item.quantity + 1 } : item
-            );
-            setCartItems(updatedCart);
-            calculateTotal(updatedCart);
-        }
-    };
-
-    return (
-        <div className="p-4 bg-gray-100 min-h-screen">
-            <h2 className="text-2xl font-bold text-center mb-4">Your Cart</h2>
-
-            {cartItems.length === 0 ? (
-                <p className="text-center text-gray-500">Your cart is empty.</p>
-            ) : (
+      {cart.length === 0 ? (
+        <p className="text-center text-gray-500">Your cart is empty. Start shopping!</p>
+      ) : (
+        <div>
+          {cart.map((item) => (
+            <div
+              key={item.id}
+              className="bg-white p-4 rounded-lg shadow-lg mb-6 flex justify-between items-center hover:shadow-xl transition-all duration-300"
+            >
+              <div className="flex items-center space-x-6">
+                <img
+                  src={item.image}
+                  alt={item.name}
+                  className="w-24 h-24 object-cover rounded-lg shadow-sm"
+                />
                 <div>
-                    {cartItems.map((item) => (
-                        <div
-                            key={item.id}
-                            className="bg-white p-4 rounded-md shadow-md mb-4 flex justify-between items-center"
-                        >
-                            <div className="flex items-center space-x-4">
-                                <img
-                                    src={item.imageUrl}
-                                    alt={item.name}
-                                    className="w-16 h-16 object-cover rounded-md"
-                                />
-                                <div>
-                                    <h3 className="font-semibold text-gray-800">{item.name}</h3>
-                                    <p className="text-gray-500">${item.price}</p>
-                                    <div className="flex items-center space-x-4">
-                                        <button
-                                            onClick={() => handleDecreaseQty(item.id)}
-                                            className="text-gray-500 hover:text-gray-700"
-                                        >
-                                            -
-                                        </button>
-                                        <span className="text-gray-800">{item.quantity}</span>
-                                        <button
-                                            onClick={() => handleIncreaseQty(item.id)}
-                                            className="text-gray-500 hover:text-gray-700"
-                                        >
-                                            +
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            <button
-                                onClick={() => handleRemoveItem(item.id)}
-                                className="text-red-500 hover:text-red-600"
-                            >
-                                Remove
-                            </button>
-                        </div>
-                    ))}
-
-                    <div className="bg-white p-4 rounded-md shadow-md mt-6 flex justify-between items-center">
-                        <span className="font-semibold text-lg">Total: ${total}</span>
-                        <div>
-                            <button
-                                onClick={handleClearCart}
-                                className="bg-blue-500 text-white py-2 px-4 rounded-lg mr-4"
-                            >
-                                Clear Cart
-                            </button>
-                            <button className="bg-green-500 text-white py-2 px-4 rounded-lg">
-                                Checkout
-                            </button>
-                        </div>
-                    </div>
+                  <h3 className="font-medium text-xl text-gray-800">{item.name}</h3>
+                  <p className="text-lg text-gray-600">${item.price}</p>
+                  <div className="flex items-center space-x-4 mt-2">
+                    <button
+                      onClick={() => updateQuantity(item.id, -1)}
+                      className="text-xl font-semibold text-gray-600 hover:text-gray-800 transition"
+                    >
+                      -
+                    </button>
+                    <span className="text-lg text-gray-700">{item.quantity}</span>
+                    <button
+                      onClick={() => updateQuantity(item.id, 1)}
+                      className="text-xl font-semibold text-gray-600 hover:text-gray-800 transition"
+                    >
+                      +
+                    </button>
+                  </div>
                 </div>
-            )}
+              </div>
+              <button
+                onClick={() => removeFromCart(item.id)}
+                className="text-red-500 hover:text-red-600 transition duration-200"
+              >
+                Remove
+              </button>
+            </div>
+          ))}
+
+          <div className="bg-white p-6 rounded-lg shadow-lg flex justify-between items-center mt-8">
+            <span className="font-semibold text-xl text-gray-800">Total: ${getTotalPrice()}</span>
+            <div>
+              <button
+                onClick={clearCart}
+                className="bg-red-500 text-white py-2 px-6 rounded-lg mr-4 hover:bg-red-600 transition"
+              >
+                Clear Cart
+              </button>
+              <button
+                onClick={handleCheckout}
+                className="bg-green-500 text-white py-2 px-6 rounded-lg hover:bg-green-600 transition"
+              >
+                Checkout
+              </button>
+            </div>
+          </div>
         </div>
-    );
+      )}
+    </div>
+  );
 };
 
 export default Cart;

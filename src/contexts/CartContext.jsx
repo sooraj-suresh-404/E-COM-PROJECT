@@ -1,125 +1,119 @@
-import React, { createContext, useState, useEffect, useContext } from 'react';
-import axios from 'axios';
+import React, { createContext, useContext, useEffect, useState } from "react";
+import { useUser } from "./UserContext";
 
+// Create CartContext
 const CartContext = createContext();
 
+// CartProvider
 export const CartProvider = ({ children }) => {
-    const [cartItems, setCartItems] = useState([]);
-    const [total, setTotal] = useState(0);
+  const [cart, setCart] = useState([]);
+  const [orders, setOrders] = useState([]);
+  const { email } = useUser();
 
-    useEffect(() => {
-        const fetchCart = async () => {
-            try {
-                const response = await axios.get("http://localhost:5002/cart");
-                setCartItems(response.data);
-                calculateTotal(response.data);
-            } catch (error) {
-                console.error("Error fetching cart data:", error);
-            }
-        };
-        fetchCart();
-    }, []);
 
-    const calculateTotal = (items) => {
-        const totalAmount = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
-        setTotal(totalAmount);
-    };
+   // Fetch cart items from the database on component mount or when email changes
+   useEffect(() => {
+    if (email) {
+      fetch(`http://localhost:3000/cart?email=${email}`)
+        .then((res) => res.json())
+        .then((data) => setCart(data || []))
+        .catch((err) => console.error("Error fetching cart data:", err));
+    } else {
+      setCart([]);
+    }
+  }, [email]);
 
-    const handleAddToCart = async (item) => {
-        try {
-            const existingItem = cartItems.find((cartItem) => cartItem.id === item.id);
+  const addToCart = (product) => {
+    if (!email) {
+      console.error("User not logged in");
+      return;
+    }
 
-            if (existingItem) {
-                // Update quantity if the item is already in the cart
-                await axios.put(`http://localhost:5002/cart/${item.id}`, {
-                    ...existingItem,
-                    quantity: existingItem.quantity + 1,
-                });
+    fetch(`http://localhost:3000/cart`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ...product, email }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setCart((prevCart) => [...prevCart, { ...product, quantity: 1 }]);
+      })
+      .catch((err) => console.error("Error adding to cart:", err));
+  };
 
-                // Optimistically update the cart state (before the response)
-                setCartItems((prevCartItems) =>
-                    prevCartItems.map((cartItem) =>
-                        cartItem.id === item.id
-                            ? { ...cartItem, quantity: cartItem.quantity + 1 }
-                            : cartItem
-                    )
-                );
-            } else {
-                // Add new item to the cart
-                await axios.post("http://localhost:5002/cart", { ...item, quantity: 1 });
+  const removeFromCart = (productId) => {
+    if (!email) {
+      console.error("User not logged in");
+      return;
+    }
 
-                // Optimistically add the new item to the cart state
-                setCartItems((prevCartItems) => [...prevCartItems, { ...item, quantity: 1 }]);
-            }
+    fetch(`http://localhost:3000/cart/${productId}?email=${email}`, {
+      method: "DELETE",
+    })
+      .then(() => {
+        setCart((prevCart) => prevCart.filter((item) => item.id !== productId));
+      })
+      .catch((err) => console.error("Error removing from cart:", err));
+  };
 
-            // Recalculate total after adding/updating item
-            calculateTotal([...cartItems, { ...item, quantity: 1 }]);
-        } catch (error) {
-            console.error("Error adding item to cart:", error);
-        }
-    };
+  const clearCart = () => {
+    if (!email) {
+      console.error("User not logged in");
+      return;
+    }
 
-    const handleRemoveItem = async (id) => {
-        try {
-            await axios.delete(`http://localhost:5002/cart/${id}`);
-            setCartItems((prevCartItems) => {
-                const updatedCart = prevCartItems.filter((item) => item.id !== id);
-                calculateTotal(updatedCart);
-                return updatedCart;
-            });
-        } catch (error) {
-            console.error("Error removing item:", error);
-        }
-    };
+    fetch(`http://localhost:3000/cart/clear?email=${email}`, {
+      method: "DELETE",
+    })
+      .then(() => setCart([]))
+      .catch((err) => console.error("Error clearing cart:", err));
+  };
 
-    const handleClearCart = async () => {
-        try {
-            await axios.delete("http://localhost:5002/cart");
-            setCartItems([]);
-            setTotal(0);
-        } catch (error) {
-            console.error("Error clearing cart:", error);
-        }
-    };
+  const updateQuantity = (productId, amount) => {
+    if (!email) {
+      console.error("User not logged in");
+      return;
+    }
 
-    const handleQuantityChange = async (id, change) => {
-        const updatedCart = cartItems.map((item) => {
-            if (item.id === id) {
-                const newQuantity = item.quantity + change;
-                if (newQuantity > 0) {
-                    return { ...item, quantity: newQuantity };
-                }
-            }
-            return item;
-        });
+    fetch(`http://localhost:3000/cart/${productId}?email=${email}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ quantity: amount }),
+    })
+      .then(() => {
+        setCart((prevCart) =>
+          prevCart.map((item) =>
+            item.id === productId
+              ? { ...item, quantity: item.quantity + amount }
+              : item
+          )
+        );
+      })
+      .catch((err) => console.error("Error updating quantity:", err));
+  };
 
-        setCartItems(updatedCart.filter((item) => item.quantity > 0));
-        calculateTotal(updatedCart);
 
-        try {
-            const updatedItem = updatedCart.find((item) => item.id === id);
-            if (updatedItem) {
-                await axios.put(`http://localhost:5002/cart/${id}`, { quantity: updatedItem.quantity });
-            }
-        } catch (error) {
-            console.error("Error updating quantity:", error);
-        }
-    };
+  const placeOrder = (orderDetails) => {
+    setOrders((prevOrders) => [...prevOrders, orderDetails]);
+    setCart([]); // Clear cart after placing order
+  };
 
-    return (
-        <CartContext.Provider
-            value={{
-                cartItems,
-                total,
-                handleAddToCart, // Add this function to the context
-                handleRemoveItem,
-                handleClearCart,
-                handleQuantityChange,
-            }}
-        >
-            {children}
-        </CartContext.Provider>
-    );
+  return (
+    <CartContext.Provider
+      value={{
+        cart,
+        addToCart,
+        removeFromCart,
+        clearCart,
+        updateQuantity,
+        orders,
+        placeOrder,
+      }}
+    >
+      {children}
+    </CartContext.Provider>
+  );
 };
 
+// Custom hook for ease of use
 export const useCart = () => useContext(CartContext);
