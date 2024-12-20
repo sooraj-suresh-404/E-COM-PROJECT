@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+// import axios from "axios";
 import { Link } from "react-router-dom";
 import { useCart } from "../contexts/CartContext";
 import { FaHeart, FaRegHeart } from "react-icons/fa"; // For Like/Unlike icons
+import { getallProducts } from "../api/productApi";
 
 const ProductDisplay = () => {
   const [products, setProducts] = useState([]);
@@ -14,7 +15,7 @@ const ProductDisplay = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/products");
+        const response = await getallProducts();
         setProducts(response.data);
       } catch (error) {
         console.error("Failed to fetch products: ", error);

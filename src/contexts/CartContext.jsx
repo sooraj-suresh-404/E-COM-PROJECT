@@ -35,7 +35,7 @@ export const CartProvider = ({ children }) => {
       body: JSON.stringify({ ...product, email }),
     })
       .then((res) => res.json())
-      .then((data) => {
+      .then(() => {
         setCart((prevCart) => [...prevCart, { ...product, quantity: 1 }]);
       })
       .catch((err) => console.error("Error adding to cart:", err));

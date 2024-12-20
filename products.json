@@ -222,25 +222,14 @@
       "rating": 4.5
     }
   ],
-  "users": [],
-  "cart": [
+  "users": [
     {
-      "id": "2",
-      "brand": "Samsung",
-      "model": "Samsung Galaxy S23 Ultra",
-      "price": 1399,
-      "description": "6.8-inch QHD+ AMOLED display, Snapdragon 8 Gen 2, 200 MP quad-camera, S Pen.",
-      "specifications": {
-        "display": "6.8-inch AMOLED",
-        "processor": "Snapdragon 8 Gen 2",
-        "ram": "12GB",
-        "storage": "256GB/512GB/1TB",
-        "battery": "5000mAh",
-        "os": "Android 13"
-      },
-      "image": "https://m.media-amazon.com/images/I/81vxWpPpgNL.jpg",
-      "rating": 4.6,
-      "email": "sooraj@gmail.com"
+      "id": "bf4a",
+      "name": "sooraj",
+      "email": "sooraj@gmail.com",
+      "password": "789456",
+      "confirmPassword": "789456"
     }
-  ]
+  ],
+  "cart": []
 }

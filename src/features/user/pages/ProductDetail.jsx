@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { useCart } from "../../../contexts/CartContext";
+import { getallProductds } from "../../../api/productApi";
 
 const ProductDetails = () => {
   const { id } = useParams(); // Get product ID from URL
@@ -15,6 +16,7 @@ const ProductDetails = () => {
     const fetchProduct = async () => {
       try {
         const response = await axios.get(`http://localhost:3000/products/${id}`);
+        // const response = await getallProductds(id);
         setProduct(response.data);
         setLoading(false);
       } catch (err) {
@@ -55,8 +57,8 @@ const ProductDetails = () => {
   };
 
   return (
-    <div className="container mx-auto py-8 px-4">
-      <div className="flex flex-col md:flex-row md:space-x-8">
+    <div className="container mx-auto py-8 px-4 m-20">
+      <div className="flex flex-col md:flex-row md:space-x-8 m-5">
         {/* Product Image Section */}
         <div className="flex-1 md:w-2/5">
           <div className="relative w-full h-[300px] md:h-[550px]">

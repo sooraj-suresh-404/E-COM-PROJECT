@@ -35,7 +35,12 @@ const Cart = () => {
       <h2 className="text-3xl font-semibold text-center text-gray-800 mb-6">Your Cart</h2>
 
       {cart.length === 0 ? (
-        <p className="text-center text-gray-500 text-3xl m-10">Your cart is empty. Start shopping!</p>
+        <div className="flex flex-col items-center justify-between h-[70vh]">
+          <p className="text-center text-gray-500 text-3xl m-10">Your cart is empty. Start shopping!</p>
+          <img src="   https://cdn-icons-png.flaticon.com/512/13637/13637462.png " alt="Empty Cart" className="mx-auto h-[350px] pt-10" />
+        </div>
+        
+
       ) : (
         <div>
           {cart.map((item) => (
