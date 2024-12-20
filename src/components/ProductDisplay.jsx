@@ -2,13 +2,15 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { useCart } from "../contexts/CartContext";
-
+import { FaHeart, FaRegHeart } from "react-icons/fa"; // For Like/Unlike icons
 
 const ProductDisplay = () => {
   const [products, setProducts] = useState([]);
   const [error, setError] = useState("");
-  const { addToCart } = useCart(); 
+  const { addToCart } = useCart();
+  const [likedProducts, setLikedProducts] = useState([]);
 
+  // Fetch products from API
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -21,7 +23,24 @@ const ProductDisplay = () => {
     };
 
     fetchProducts();
+
+    // Retrieve liked products from localStorage
+    const storedLikes = JSON.parse(localStorage.getItem("likedProducts")) || [];
+    setLikedProducts(storedLikes);
   }, []);
+
+  // Handle like button click
+  const handleLike = (productId) => {
+    let updatedLikes;
+    if (likedProducts.includes(productId)) {
+      updatedLikes = likedProducts.filter((id) => id !== productId); // Remove from likes
+    } else {
+      updatedLikes = [...likedProducts, productId]; // Add to likes
+    }
+
+    setLikedProducts(updatedLikes);
+    localStorage.setItem("likedProducts", JSON.stringify(updatedLikes)); // Store in localStorage
+  };
 
   return (
     <div className="bg-gray-50 py-8">
@@ -33,20 +52,20 @@ const ProductDisplay = () => {
             products.map((product) => (
               <div
                 key={product.id}
-                className="bg-white rounded-lg shadow-md p-4 relative  hover:shadow-xl transform transition duration-300 hover:scale-105"
+                className="bg-white rounded-lg shadow-md p-4 relative hover:shadow-xl transform transition duration-300 hover:scale-105"
               >
-                {product.image?(
-                <Link
-                  to={`/product-details/${product.id}`}
-                  className="block"
-                  aria-label={`View details of ${product.name}`}
-                >
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                    className="rounded-t-lg w-full h-48 object-contain"
-                  />
-                </Link>
+                {product.image ? (
+                  <Link
+                    to={`/product/${product.id}`}
+                    className="block"
+                    aria-label={`View details of ${product.name}`}
+                  >
+                    <img
+                      src={product.image}
+                      alt={product.name}
+                      className="rounded-t-lg w-full h-48 object-contain"
+                    />
+                  </Link>
                 ) : (
                   <div className="w-full h-48 bg-gray-200 rounded-t-lg flex items-center justify-center">
                     <span className="text-gray-600 text-sm">No Image</span>
@@ -54,20 +73,43 @@ const ProductDisplay = () => {
                 )}
                 <div className="mt-4">
                   <h3 className="text-lg font-semibold text-gray-700">{product.name}</h3>
-                  <p className="text-gray-500">₹{product.price}</p>
+                  <p className="text-gray-500">{product.model}</p>
+                  <p className="text-gray-500">${product.price}</p>
+                  <div className="flex items-center mt-2">
+                    <span className="text-yellow-500">
+                      {Array.from({ length: 5 }, (_, index) => (
+                        <span key={index}>
+                          {index < Math.floor(product.rating) ? "★" : "☆"}
+                        </span>
+                      ))}
+                    </span>
+                    <span className="ml-2 text-gray-500">({product.rating} stars)</span>
+                  </div>
+                  <p className="text-gray-500 mt-2">{product.description}</p>
                   <button
                     className="w-full mt-4 bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg transition"
                     onClick={(e) => {
                       e.preventDefault();
-                      addToCart(product); 
-                      alert(`Added ${product.name} to the cart!`)
+                      addToCart(product);
+                      alert(`Added ${product.model} to the cart!`);
                     }}
                   >
                     Add to Cart
                   </button>
+
+                  {/* Like Button */}
+                  <button
+                    onClick={() => handleLike(product.id)}
+                    className="absolute top-2 right-2 text-xl p-2 rounded-full hover:bg-gray-200 transition-all duration-300"
+                  >
+                    {likedProducts.includes(product.id) ? (
+                      <FaHeart className="text-red-500" />
+                    ) : (
+                      <FaRegHeart className="text-gray-500" />
+                    )}
+                  </button>
                 </div>
               </div>
-               
             ))
           ) : (
             <p className="text-gray-500 text-lg text-center col-span-4">No products available</p>

@@ -1,34 +1,48 @@
 {
   "orders": [
     {
-      "id": "92f6",
+      "id": "45df",
       "email": "sooraj@gmail.com",
       "items": [
         {
-          "id": "3",
-          "name": "OnePlus 11 Pro",
+          "id": "1",
           "quantity": 1,
-          "price": 899
+          "price": 1199
         }
       ],
-      "total": 899,
+      "total": 1199,
       "paymentMethod": "Cash on Delivery",
-      "date": "2024-12-18T18:30:22.375Z"
+      "shippingAddress": {
+        "name": "casascsc",
+        "street": "dddd",
+        "city": "cc",
+        "state": "d",
+        "postalCode": "5",
+        "country": "India"
+      },
+      "date": "2024-12-19T11:19:51.209Z"
     },
     {
-      "id": "4add",
+      "id": "fbba",
       "email": "sooraj@gmail.com",
       "items": [
         {
-          "id": "3",
-          "name": "OnePlus 11 Pro",
+          "id": "2",
           "quantity": 1,
-          "price": 899
+          "price": 1399
         }
       ],
-      "total": 899,
-      "paymentMethod": "Debit Card",
-      "date": "2024-12-18T18:30:54.641Z"
+      "total": 1399,
+      "paymentMethod": "Cash on Delivery",
+      "shippingAddress": {
+        "name": "d",
+        "street": "scdvv",
+        "city": "f",
+        "state": "f",
+        "postalCode": "f",
+        "country": "India"
+      },
+      "date": "2024-12-19T11:31:21.875Z"
     }
   ]
 }
