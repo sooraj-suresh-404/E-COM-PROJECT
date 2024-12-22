@@ -1,18 +1,30 @@
 import React, { useState } from "react";
-import { FiShoppingCart, FiUser } from "react-icons/fi";
-import { NavLink } from "react-router-dom";
+import { FiShoppingCart } from "react-icons/fi";
+import { NavLink, useNavigate } from "react-router-dom"; // Import useNavigate
 import { useUser } from "../contexts/UserContext";
 import { useCart } from "../contexts/CartContext";
 
 const Navbar = () => {
   const { email, handleLogout, name } = useUser();
-  const { cartItems } = useCart();
+  const { cart } = useCart(); // Get the cart state from CartContext
   const [isDropdownOpen, setDropdownOpen] = useState(false);
+  const navigate = useNavigate(); // Initialize navigate
 
-  const cartCount = cartItems ? cartItems.length : 0;
+  const cartCount = cart ? cart.length : 0; // Get the number of items in the cart
+
+  // Handle click on the cart icon
+  const handleCartClick = () => {
+    if (!email) {
+      // If the user is not logged in, redirect them to the login page
+      navigate("/login");
+    } else {
+      // If the user is logged in, navigate to the cart page
+      navigate("/cart");
+    }
+  };
 
   return (
-    <header className="bg-blue-600 text-white shadow-md fixed top-0 left-0 right-0 z-50  ">
+    <header className="bg-blue-600 text-white shadow-md fixed top-0 left-0 right-0 z-50">
       <nav className="max-w-8xl mx-auto px-5 py-5 flex items-center justify-between">
         {/* Logo */}
         <div className="text-2xl font-bold">
@@ -31,14 +43,17 @@ const Navbar = () => {
         {/* Icons and Profile - Aligned to the right */}
         <div className="flex items-center space-x-4 ml-auto">
           {/* Cart Icon */}
-          <NavLink to="/cart" className="relative hover:text-gray-300">
+          <div
+            className="relative hover:text-gray-300"
+            onClick={handleCartClick} // Add onClick handler to the Cart icon
+          >
             <FiShoppingCart className="h-6 w-6" />
             {cartCount > 0 && (
               <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full text-xs w-5 h-5 flex items-center justify-center">
                 {cartCount}
               </span>
             )}
-          </NavLink>
+          </div>
 
           {/* Profile Icon or Login Button */}
           {email ? (

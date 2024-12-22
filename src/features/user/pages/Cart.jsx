@@ -1,46 +1,47 @@
 import React from "react";
 import { useCart } from "../../../contexts/CartContext";
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate } from "react-router-dom";
 import { useUser } from "../../../contexts/UserContext";
 
 const Cart = () => {
-  const { cart, removeFromCart, clearCart, updateQuantity, addToCart } = useCart();
+  const { cart, removeFromCart, clearCart, updateQuantity } = useCart();
   const navigate = useNavigate();
   const { email } = useUser();
 
+  // Get total price, fallback to 0 if no items or invalid price/quantity
   const getTotalPrice = () =>
-    cart.reduce((total, item) => total + item.price * item.quantity, 0);
+    cart.reduce((total, item) => total + (item.price || 0) * (item.quantity || 0), 0);
 
+  // Handle checkout process
   const handleCheckout = () => {
     navigate("/checkout");
   };
 
-  // Function to handle adding items to the cart
-  const handleAddToCart = (item) => {
-    // Check if the item already exists in the cart
-    const existingItem = cart.find(cartItem => cartItem.id === item.id);
-    if (existingItem) {
-      // If item exists, increase its quantity
-      updateQuantity(item.id, 1);
-    } else {
-      // If item doesn't exist, add it to the cart
-      addToCart(item);
+  // Ensure that the quantity is at least 1 when updating
+  const handleQuantityChange = (item, change) => {
+    const newQuantity = (item.quantity || 0) + change;
+    if (newQuantity > 0) {
+      updateQuantity(item.id, change);
     }
   };
 
-  if (!email) return <p className="text-center text-gray-500">Please log in to view your cart.</p>;
+  if (!email) {
+    return <p className="text-center text-gray-500">Please log in to view your cart.</p>;
+  }
 
   return (
     <div className="p-4 bg-gray-50 min-h-screen">
       <h2 className="text-3xl font-semibold text-center text-gray-800 mb-6">Your Cart</h2>
 
       {cart.length === 0 ? (
-        <div className="flex flex-col items-center justify-between h-[70vh]">
-          <p className="text-center text-gray-500 text-3xl m-10">Your cart is empty. Start shopping!</p>
-          <img src="   https://cdn-icons-png.flaticon.com/512/13637/13637462.png " alt="Empty Cart" className="mx-auto h-[350px] pt-10" />
+        <div className="flex flex-col items-center justify-center h-[70vh]">
+          <p className="text-center text-gray-500 text-3xl mb-10">Your cart is empty. Start shopping!</p>
+          <img
+            src="https://cdn-icons-png.flaticon.com/512/13637/13637462.png"
+            alt="Empty Cart"
+            className="mx-auto h-[350px] pt-10"
+          />
         </div>
-        
-
       ) : (
         <div>
           {cart.map((item) => (
@@ -50,23 +51,23 @@ const Cart = () => {
             >
               <div className="flex items-center space-x-6">
                 <img
-                  src={item.image}
-                  alt={item.name}
+                  src={item.image || "/placeholder.jpg"} // Fallback image if image is missing
+                  alt={item.model || "Product"} // Fallback name if name is missing
                   className="w-24 h-24 object-cover rounded-lg shadow-sm"
                 />
                 <div>
-                  <h3 className="font-medium text-xl text-gray-800">{item.name}</h3>
-                  <p className="text-lg text-gray-600">${item.price}</p>
+                  <h3 className="font-medium text-xl text-gray-800">{item.model || "Unknown Item"}</h3>
+                  <p className="text-lg text-gray-600">${(item.price || 0).toFixed(2)}</p> {/* Fallback price */}
                   <div className="flex items-center space-x-4 mt-2">
                     <button
-                      onClick={() => updateQuantity(item.id, -1)}
+                      onClick={() => handleQuantityChange(item, -1)}
                       className="text-xl font-semibold text-gray-600 hover:text-gray-800 transition"
                     >
                       -
                     </button>
-                    <span className="text-lg text-gray-700">{item.quantity}</span>
+                    <span className="text-lg text-gray-700">{item.quantity || 0}</span>
                     <button
-                      onClick={() => updateQuantity(item.id, 1)}
+                      onClick={() => handleQuantityChange(item, 1)}
                       className="text-xl font-semibold text-gray-600 hover:text-gray-800 transition"
                     >
                       +
@@ -84,7 +85,7 @@ const Cart = () => {
           ))}
 
           <div className="bg-white p-6 rounded-lg shadow-lg flex justify-between items-center mt-8">
-            <span className="font-semibold text-xl text-gray-800">Total: ${getTotalPrice()}</span>
+            <span className="font-semibold text-xl text-gray-800">Total: ${(getTotalPrice()).toFixed(2)}</span>
             <div>
               <button
                 onClick={clearCart}

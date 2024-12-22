@@ -18,17 +18,29 @@ const LoginPage = () => {
     e.preventDefault();
     try {
       const { data } = await axios.get("http://localhost:3000/users", {
-        params: { email: form.email, password: form.password },
+        params: { email: form.email },
       });
 
-      if (data.length > 0) {
-        const userEmail = data[0].email;
-        const userName = data[0].name;
-        handleLogin(userEmail, userName);
-        navigate("/");
-      } else {
+      const user = data[0];
+
+      if (!user || user.password !== form.password) {
         setMessage("Invalid email or password");
+        return;
       }
+
+      // Store user data in localStorage
+      localStorage.setItem("userData", JSON.stringify(user));
+
+      // Call handleLogin with user data
+      handleLogin(user.email, user.name);
+
+      // Navigate based on user role
+      if (user.role === "admin") {
+        navigate("/admin"); // Navigate to admin dashboard
+      } else {
+        navigate("/"); // Navigate to home page for regular users
+      }
+
     } catch (error) {
       console.error("Login Error:", error);
       setMessage("An error occurred. Please try again.");

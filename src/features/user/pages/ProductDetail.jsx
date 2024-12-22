@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom"; // Import useNavigate
 import axios from "axios";
 import { useCart } from "../../../contexts/CartContext";
-import { getallProductds } from "../../../api/productApi";
+import { useUser } from "../../../contexts/UserContext"; // Assuming you have a UserContext
 
 const ProductDetails = () => {
   const { id } = useParams(); // Get product ID from URL
@@ -11,12 +11,13 @@ const ProductDetails = () => {
   const [loading, setLoading] = useState(true);
 
   const { addToCart } = useCart();
+  const { email } = useUser(); // Get the logged-in user’s email from UserContext
+  const navigate = useNavigate(); // Navigate function to redirect user
 
   useEffect(() => {
     const fetchProduct = async () => {
       try {
         const response = await axios.get(`http://localhost:3000/products/${id}`);
-        // const response = await getallProductds(id);
         setProduct(response.data);
         setLoading(false);
       } catch (err) {
@@ -31,8 +32,24 @@ const ProductDetails = () => {
 
   // Handle Buy Now functionality
   const buyNow = () => {
+    if (!email) {
+      alert("Please log in to buy the product.");
+      navigate("/login"); // Redirect to login page
+      return;
+    }
     if (!product) return;
     console.log("Redirecting to checkout with:", product);
+  };
+
+  // Handle Add to Cart functionality
+  const handleAddToCart = () => {
+    if (!email) {
+      alert("Please log in to add the product to the cart.");
+      navigate("/login"); // Redirect to login page
+      return;
+    }
+    addToCart(product);
+    alert(`Added ${product.model} to the cart!`);
   };
 
   if (loading) return <p className="text-center my-10">Loading...</p>;
@@ -116,17 +133,13 @@ const ProductDetails = () => {
           <div className="mt-6 flex flex-col sm:flex-row sm:space-x-4">
             <button
               className="w-full sm:w-[150px] bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-lg transition mb-4 sm:mb-0"
-              onClick={(e) => {
-                e.preventDefault();
-                addToCart(product);
-                alert(`Added ${product.mod} to the cart!`);
-              }}
+              onClick={handleAddToCart} // Handle Add to Cart with login check
             >
               Add to Cart
             </button>
             <button
               className="w-full sm:w-[150px] bg-green-500 hover:bg-green-600 text-white py-3 rounded-lg transition"
-              onClick={buyNow}
+              onClick={buyNow} // Handle Buy Now with login check
             >
               Buy Now
             </button>

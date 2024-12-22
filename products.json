@@ -22,7 +22,7 @@
       "brand": "Samsung",
       "model": "Samsung Galaxy S23 Ultra",
       "price": 1399,
-      "description": "6.8-inch QHD+ AMOLED display, Snapdragon 8 Gen 2, 200 MP quad-camera, S Pen.",
+      "description": "6.8-inch QHD+ AMOLED display, Snapdragon 8 Gen 2,200 MP quad-camera,S Pen.",
       "specifications": {
         "display": "6.8-inch AMOLED",
         "processor": "Snapdragon 8 Gen 2",
@@ -228,8 +228,26 @@
       "name": "sooraj",
       "email": "sooraj@gmail.com",
       "password": "789456",
-      "confirmPassword": "789456"
+      "role": "user",
+      "confirmPassword": "789456",
+      "cart": []
+    },
+    {
+      "id": "8acb",
+      "name": "admin",
+      "email": "admin@gmail.com",
+      "password": "14789",
+      "role": "admin",
+      "confirmPassword": "14789"
+    },
+    {
+      "id": "35bd",
+      "name": "ss",
+      "email": "srss@g.com",
+      "password": "1234",
+      "role": "user",
+      "cart": [],
+      "createdAt": "2024-12-22T18:44:47.099Z"
     }
-  ],
-  "cart": []
+  ]
 }

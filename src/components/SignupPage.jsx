@@ -30,7 +30,16 @@ const SignupPage = () => {
       if (data.length > 0) {
         setMessage("User already exists");
       } else {
-        await axios.post("http://localhost:3000/users", form);
+        const newUser = {
+          name: form.name,
+          email: form.email,
+          password: form.password,
+          role: "user",
+          cart: [],
+          createdAt: new Date().toISOString()
+        };
+
+        await axios.post("http://localhost:3000/users", newUser);
         handleLogin(form.email, form.name);
         navigate("/");
       }

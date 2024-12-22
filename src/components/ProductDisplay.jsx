@@ -1,21 +1,24 @@
 import React, { useEffect, useState } from "react";
-// import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom"; // Import useNavigate
 import { useCart } from "../contexts/CartContext";
 import { FaHeart, FaRegHeart } from "react-icons/fa"; // For Like/Unlike icons
 import { getallProducts } from "../api/productApi";
+import axios from "axios";
+import { useUser } from "../contexts/UserContext"; // Import useUser context
 
 const ProductDisplay = () => {
   const [products, setProducts] = useState([]);
   const [error, setError] = useState("");
   const { addToCart } = useCart();
   const [likedProducts, setLikedProducts] = useState([]);
+  const { email } = useUser(); // Get the user email (logged-in check)
+  const navigate = useNavigate(); // Initialize navigate
 
   // Fetch products from API
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await getallProducts();
+        const response = await axios.get("http://localhost:3000/products");
         setProducts(response.data);
       } catch (error) {
         console.error("Failed to fetch products: ", error);
@@ -41,6 +44,19 @@ const ProductDisplay = () => {
 
     setLikedProducts(updatedLikes);
     localStorage.setItem("likedProducts", JSON.stringify(updatedLikes)); // Store in localStorage
+  };
+
+  // Handle add to cart button click
+  const handleAddToCart = (product) => {
+    if (!email) {
+      // If the user is not logged in, show an alert and redirect to login
+      alert("Please log in to add items to the cart.");
+      navigate("/login");
+    } else {
+      // If the user is logged in, add product to cart
+      addToCart(product);
+      alert(`Added ${product.model} to the cart!`);
+    }
   };
 
   return (
@@ -73,8 +89,8 @@ const ProductDisplay = () => {
                   </div>
                 )}
                 <div className="mt-4">
-                  <h3 className="text-lg font-semibold text-gray-700">{product.name}</h3>
-                  <p className="text-gray-500">{product.model}</p>
+                  <h3 className="text-lg font-semibold text-gray-700">{product.model}</h3>
+                  {/* <p className="text-gray-500">{product.}</p> */}
                   <p className="text-gray-500">${product.price}</p>
                   <div className="flex items-center mt-2">
                     <span className="text-yellow-500">
@@ -91,8 +107,7 @@ const ProductDisplay = () => {
                     className="w-full mt-4 bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg transition"
                     onClick={(e) => {
                       e.preventDefault();
-                      addToCart(product);
-                      alert(`Added ${product.model} to the cart!`);
+                      handleAddToCart(product); // Use the new handleAddToCart function
                     }}
                   >
                     Add to Cart

@@ -6,10 +6,10 @@ import { useUser } from "../../../contexts/UserContext";
 const Checkout = () => {
   const { cart, clearCart } = useCart();
   const { email } = useUser();
-  const getTotalPrice = () => cart.reduce((total, item) => total + item.price * item.quantity, 0);
   const navigate = useNavigate();
   const [selectedPayment, setSelectedPayment] = useState("");
-  
+  const [loading, setLoading] = useState(false);
+
   // Address form state
   const [address, setAddress] = useState({
     name: "",
@@ -24,6 +24,9 @@ const Checkout = () => {
     const { name, value } = e.target;
     setAddress({ ...address, [name]: value });
   };
+
+  const getTotalPrice = () =>
+    cart.reduce((total, item) => total + item.price * item.quantity, 0);
 
   const handleOrderConfirmation = async () => {
     if (!selectedPayment) {
@@ -49,17 +52,16 @@ const Checkout = () => {
       date: new Date().toISOString(),
     };
 
+    setLoading(true);
     try {
       const response = await fetch("http://localhost:5001/orders", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(orderDetails),
       });
 
       if (response.ok) {
-        alert(`Order placed successfully with ${selectedPayment}!`);
+        alert("Order placed successfully!");
         clearCart();
         navigate("/orders");
       } else {
@@ -68,6 +70,8 @@ const Checkout = () => {
     } catch (error) {
       console.error("Order Error:", error);
       alert("An error occurred while placing the order.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -77,180 +81,82 @@ const Checkout = () => {
         <h2 className="text-3xl font-bold text-center mb-6">Checkout</h2>
         {cart.length > 0 ? (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Left Column: Address Form */}
+            {/* Shipping Address */}
             <div className="space-y-6">
               <h3 className="text-xl font-semibold">Shipping Address</h3>
               <div className="bg-gray-50 p-6 rounded-lg shadow-sm">
                 <form className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-semibold">Name</label>
-                    <input
-                      type="text"
-                      name="name"
-                      value={address.name}
-                      onChange={handleAddressChange}
-                      className="w-full p-2 border border-gray-300 rounded-md"
-                      placeholder="Enter your full name"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-semibold">Street Address</label>
-                    <input
-                      type="text"
-                      name="street"
-                      value={address.street}
-                      onChange={handleAddressChange}
-                      className="w-full p-2 border border-gray-300 rounded-md"
-                      placeholder="Enter your street address"
-                    />
-                  </div>
-                  <div className="flex space-x-4">
-                    <div className="w-1/2">
-                      <label className="block text-sm font-semibold">City</label>
+                  {["name", "street", "city", "state", "postalCode"].map((field, index) => (
+                    <div key={index}>
+                      <label className="block text-sm font-semibold capitalize">
+                        {field}
+                      </label>
                       <input
                         type="text"
-                        name="city"
-                        value={address.city}
+                        name={field}
+                        value={address[field]}
                         onChange={handleAddressChange}
                         className="w-full p-2 border border-gray-300 rounded-md"
-                        placeholder="City"
+                        placeholder={`Enter your ${field}`}
                       />
                     </div>
-                    <div className="w-1/2">
-                      <label className="block text-sm font-semibold">State</label>
-                      <input
-                        type="text"
-                        name="state"
-                        value={address.state}
-                        onChange={handleAddressChange}
-                        className="w-full p-2 border border-gray-300 rounded-md"
-                        placeholder="State"
-                      />
-                    </div>
-                  </div>
-                  <div className="flex space-x-4">
-                    <div className="w-1/2">
-                      <label className="block text-sm font-semibold">Postal Code</label>
-                      <input
-                        type="text"
-                        name="postalCode"
-                        value={address.postalCode}
-                        onChange={handleAddressChange}
-                        className="w-full p-2 border border-gray-300 rounded-md"
-                        placeholder="Postal Code"
-                      />
-                    </div>
-                    <div className="w-1/2">
-                      <label className="block text-sm font-semibold">Country</label>
-                      <input
-                        type="text"
-                        name="country"
-                        value={address.country}
-                        onChange={handleAddressChange}
-                        className="w-full p-2 border border-gray-300 rounded-md"
-                        placeholder="Country"
-                      />
-                    </div>
-                  </div>
+                  ))}
                 </form>
               </div>
             </div>
 
-            {/* Middle Column: Order Summary */}
+            {/* Order Summary */}
             <div className="space-y-6">
               <h3 className="text-xl font-semibold">Order Summary</h3>
               <div className="bg-gray-50 p-6 rounded-lg shadow-sm">
                 {cart.map((product) => (
-                  <div
-                    key={product.id}
-                    className="flex justify-between items-center mb-4 border-b border-gray-200 pb-4"
-                  >
-                    <div className="flex items-center space-x-4">
-                      <img
-                        src={product.image}
-                        alt={product.name}
-                        className="w-16 h-16 object-cover rounded-md"
-                      />
-                      <div>
-                        <h4 className="font-semibold">{product.name}</h4>
-                        <p>₹{product.price} x {product.quantity}</p>
-                      </div>
-                    </div>
-                    <div className="text-lg font-semibold">
-                      ₹{product.price * product.quantity}
+                  <div key={product.id} className="flex items-center gap-4 border-b pb-4">
+                    <img
+                      src={product.image || "/placeholder.jpg"}
+                      alt={product.name}
+                      className="w-16 h-16 object-cover rounded-md border"
+                    />
+                    <div>
+                      <h4 className="font-semibold">{product.name}</h4>
+                      <p className="text-sm">₹{product.price} x {product.quantity}</p>
                     </div>
                   </div>
                 ))}
-              </div>
-
-              <div className="flex justify-between items-center mt-6">
-                <span className="text-xl font-semibold">Total Amount</span>
-                <span className="text-xl font-semibold">${getTotalPrice()}</span>
+                <div className="flex justify-between items-center mt-6">
+                  <span className="text-xl font-semibold">Total Amount</span>
+                  <span className="text-xl font-semibold">₹{getTotalPrice()}</span>
+                </div>
               </div>
             </div>
 
-            {/* Right Column: Payment Methods */}
+            {/* Payment Methods */}
             <div className="space-y-6">
               <h3 className="text-xl font-semibold">Payment Method</h3>
               <div className="bg-gray-50 p-6 rounded-lg shadow-sm">
-                <div className="space-y-4">
-                  <label className="flex items-center space-x-3">
-                    <input
-                      type="radio"
-                      value="Credit Card"
-                      checked={selectedPayment === "Credit Card"}
-                      onChange={(e) => setSelectedPayment(e.target.value)}
-                      className="w-5 h-5"
-                    />
-                    <span className="text-lg">Credit Card</span>
-                  </label>
-                  <label className="flex items-center space-x-3">
-                    <input
-                      type="radio"
-                      value="Debit Card"
-                      checked={selectedPayment === "Debit Card"}
-                      onChange={(e) => setSelectedPayment(e.target.value)}
-                      className="w-5 h-5"
-                    />
-                    <span className="text-lg">Debit Card</span>
-                  </label>
-                  <label className="flex items-center space-x-3">
-                    <input
-                      type="radio"
-                      value="PayPal"
-                      checked={selectedPayment === "PayPal"}
-                      onChange={(e) => setSelectedPayment(e.target.value)}
-                      className="w-5 h-5"
-                    />
-                    <span className="text-lg">PayPal</span>
-                  </label>
-                  <label className="flex items-center space-x-3">
-                    <input
-                      type="radio"
-                      value="Cash on Delivery"
-                      checked={selectedPayment === "Cash on Delivery"}
-                      onChange={(e) => setSelectedPayment(e.target.value)}
-                      className="w-5 h-5"
-                    />
-                    <span className="text-lg">Cash on Delivery</span>
-                  </label>
-                </div>
+                {["Credit Card", "Debit Card", "PayPal", "Cash on Delivery"].map(
+                  (method, index) => (
+                    <label key={index} className="flex items-center space-x-3">
+                      <input
+                        type="radio"
+                        value={method}
+                        checked={selectedPayment === method}
+                        onChange={() => setSelectedPayment(method)}
+                        className="w-5 h-5"
+                      />
+                      <span className="text-lg">{method}</span>
+                    </label>
+                  )
+                )}
               </div>
-
-              <div className="flex justify-between mt-6">
-                <button
-                  onClick={handleOrderConfirmation}
-                  className="w-full lg:w-40 bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600 transition duration-200"
-                >
-                  Confirm Order
-                </button>
-                <button
-                  onClick={() => navigate("/cart")}
-                  className="w-full lg:w-40 bg-gray-300 text-black py-3 rounded-lg hover:bg-gray-400 transition duration-200"
-                >
-                  Back to Cart
-                </button>
-              </div>
+              <button
+                onClick={handleOrderConfirmation}
+                className={`w-full bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600 transition ${
+                  loading ? "opacity-50" : ""
+                }`}
+                disabled={loading}
+              >
+                {loading ? "Placing Order..." : "Confirm Order"}
+              </button>
             </div>
           </div>
         ) : (
