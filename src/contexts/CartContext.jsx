@@ -1,150 +1,66 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useState, useMemo } from "react";
 import { useUser } from "./UserContext";
+import * as CartApi from "../api/CartApi";
 
-// Create CartContext
 const CartContext = createContext();
 
-// CartProvider
 export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
   const [orders, setOrders] = useState([]);
   const { email } = useUser();
 
-  // Fetch cart items from the database on component mount or when email changes
   useEffect(() => {
     if (email) {
-      fetch(`http://localhost:3000/users?email=${email}`)
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.length > 0) {
-            setCart(data[0].cart || []);
-          } else {
-            console.error("User not found");
-          }
-        })
-        .catch((err) => console.error("Error fetching cart data:", err));
+      const fetchData = async () => {
+        const fetchedCart = await CartApi.fetchCart(email);
+        setCart(fetchedCart);
+      };
+      fetchData();
     } else {
       setCart([]);
     }
   }, [email]);
 
-  const addToCart = (product) => {
+  const addToCart = async (product) => {
     if (!email) {
       console.error("User not logged in");
       return;
     }
-
-    fetch(`http://localhost:3000/users?email=${email}`)
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.length > 0) {
-          const user = data[0];
-          const updatedCart = [...user.cart, { ...product, quantity: 1 }];
-
-          return fetch(`http://localhost:3000/users/${user.id}`, {
-            method: "PATCH",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ cart: updatedCart }),
-          });
-        } else {
-          console.error("User not found");
-        }
-      })
-      .then(() => {
-        setCart((prevCart) => [...prevCart, { ...product, quantity: 1 }]);
-      })
-      .catch((err) => console.error("Error adding to cart:", err));
+    const updatedCart = await CartApi.addToCartApi(email, product);
+    if (updatedCart) {
+      setCart(updatedCart);
+    }
   };
 
-  const removeFromCart = (productId) => {
+  const removeFromCart = async (productId) => {
     if (!email) {
       console.error("User not logged in");
       return;
     }
-
-    fetch(`http://localhost:3000/users?email=${email}`)
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.length > 0) {
-          const user = data[0];
-          const updatedCart = user.cart.filter((item) => item.id !== productId);
-
-          return fetch(`http://localhost:3000/users/${user.id}`, {
-            method: "PATCH",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ cart: updatedCart }),
-          });
-        } else {
-          console.error("User not found");
-        }
-      })
-      .then(() => {
-        setCart((prevCart) => prevCart.filter((item) => item.id !== productId));
-      })
-      .catch((err) => console.error("Error removing from cart:", err));
+    const updatedCart = await CartApi.removeFromCartApi(email, productId);
+    if (updatedCart) {
+      setCart(updatedCart);
+    }
   };
 
-  const clearCart = () => {
+  const clearCart = async () => {
     if (!email) {
       console.error("User not logged in");
       return;
     }
-
-    fetch(`http://localhost:3000/users?email=${email}`)
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.length > 0) {
-          const user = data[0];
-
-          return fetch(`http://localhost:3000/users/${user.id}`, {
-            method: "PATCH",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ cart: [] }),
-          });
-        } else {
-          console.error("User not found");
-        }
-      })
-      .then(() => setCart([]))
-      .catch((err) => console.error("Error clearing cart:", err));
+    const updatedCart = await CartApi.clearCartApi(email);
+    setCart(updatedCart);
   };
 
-  const updateQuantity = (productId, amount) => {
+  const updateQuantity = async (productId, amount) => {
     if (!email) {
       console.error("User not logged in");
       return;
     }
-
-    fetch(`http://localhost:3000/users?email=${email}`)
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.length > 0) {
-          const user = data[0];
-          const updatedCart = user.cart.map((item) =>
-            item.id === productId
-              ? { ...item, quantity: item.quantity + amount }
-              : item
-          );
-
-          return fetch(`http://localhost:3000/users/${user.id}`, {
-            method: "PATCH",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ cart: updatedCart }),
-          });
-        } else {
-          console.error("User not found");
-        }
-      })
-      .then(() => {
-        setCart((prevCart) =>
-          prevCart.map((item) =>
-            item.id === productId
-              ? { ...item, quantity: item.quantity + amount }
-              : item
-          )
-        );
-      })
-      .catch((err) => console.error("Error updating quantity:", err));
+    const updatedCart = await CartApi.updateQuantityApi(email, productId, amount);
+    if (updatedCart) {
+      setCart(updatedCart);
+    }
   };
 
   const placeOrder = (orderDetails) => {
@@ -152,22 +68,21 @@ export const CartProvider = ({ children }) => {
     clearCart(); // Clear cart after placing order
   };
 
+  const value = useMemo(() => ({
+    cart,
+    addToCart,
+    removeFromCart,
+    clearCart,
+    updateQuantity,
+    orders,
+    placeOrder,
+  }), [cart, orders]);
+
   return (
-    <CartContext.Provider
-      value={{
-        cart,
-        addToCart,
-        removeFromCart,
-        clearCart,
-        updateQuantity,
-        orders,
-        placeOrder,
-      }}
-    >
+    <CartContext.Provider value={value}>
       {children}
     </CartContext.Provider>
   );
 };
 
-// Custom hook for ease of use
 export const useCart = () => useContext(CartContext);

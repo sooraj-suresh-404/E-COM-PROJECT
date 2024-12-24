@@ -1,7 +1,7 @@
-import axios from "axios";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useUser } from "../contexts/UserContext";
+import { checkUser, addUser } from "../api/userApi";  // Import your API functions
 
 const SignupPage = () => {
   const navigate = useNavigate();
@@ -23,11 +23,10 @@ const SignupPage = () => {
     }
 
     try {
-      const { data } = await axios.get("http://localhost:3000/users", {
-        params: { email: form.email },
-      });
+      // Check if the user already exists using checkUser
+      const existingUser = await checkUser(form.email, form.password);
 
-      if (data.length > 0) {
+      if (existingUser) {
         setMessage("User already exists");
       } else {
         const newUser = {
@@ -35,13 +34,15 @@ const SignupPage = () => {
           email: form.email,
           password: form.password,
           role: "user",
+          block: false,
           cart: [],
           createdAt: new Date().toISOString()
         };
 
-        await axios.post("http://localhost:3000/users", newUser);
+        // Add new user using addUser
+        await addUser(newUser);
         handleLogin(form.email, form.name);
-        navigate("/");
+        navigate("/");  // Navigate to home page after successful signup
       }
     } catch (error) {
       console.error("Signup Error:", error);
@@ -50,7 +51,7 @@ const SignupPage = () => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-gray-100 via-white to-gray-200">
+    <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-gray-100 via-white to-gray-200 ">
       <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-md">
         <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">Sign Up</h2>
         <p className="text-center text-gray-600 mb-4">

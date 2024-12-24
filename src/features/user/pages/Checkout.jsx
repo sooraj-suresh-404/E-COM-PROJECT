@@ -124,7 +124,7 @@ const Checkout = () => {
                 ))}
                 <div className="flex justify-between items-center mt-6">
                   <span className="text-xl font-semibold">Total Amount</span>
-                  <span className="text-xl font-semibold">₹{getTotalPrice()}</span>
+                  <span className="text-xl font-semibold">${getTotalPrice()}</span>
                 </div>
               </div>
             </div>

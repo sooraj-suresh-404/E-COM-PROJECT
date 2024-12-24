@@ -84,16 +84,19 @@ const Order = () => {
                       {item.model || "Product Name"}
                     </h4>
                     <p className="text-sm text-gray-600">Qty: {item.quantity}</p>
-                    <p className="text-sm text-gray-600">Price: ₹{item.price}</p>
+                    <p className="text-sm text-gray-600">Price: ${item.price}</p>
                   </div>
                 </div>
               ))}
             </div>
           ))
         ) : (
-          <p className="flex justify-center items-center text-2xl text-gray-700">
-            No orders found
-          </p>
+          <div className="flex flex-col items-center justify-center">
+            <p className="flex justify-center items-center text-4xl text-gray-700">
+             No orders found
+            </p>
+            <img src="	https://cdn-icons-png.flaticon.com/512/17569/17569003.png" alt="No Orders" className="mx-auto h-[350px] pt-20 mt-10  " />
+          </div>
         )}
       </div>
     </div>

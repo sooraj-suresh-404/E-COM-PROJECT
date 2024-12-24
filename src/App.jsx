@@ -6,6 +6,7 @@ import UserRouter from './features/user/UserRouter';
 import { CartProvider } from './contexts/CartContext';
 import { UserProvider } from './contexts/UserContext';
 import { AuthProvider } from './contexts/AuthContext';
+import PageNotFound from './components/NotFound';
 
 const App = () => {
     return (
@@ -13,15 +14,12 @@ const App = () => {
             <UserProvider>
                 <AuthProvider>
                     <CartProvider>
-                        <div className="flex flex-col min-h-screen">
-                            <div className="flex-1">
-                                <Routes>
-                                    <Route path="/*" element={<UserRouter />} />
-                                    <Route path="/admin/*" element={<AdminRouter />} />
-                                </Routes>
-                            </div>
-                            <Footer />
-                        </div>
+                            <Routes>
+                                <Route path="/*" element={<UserRouter />} />
+                                <Route path="/admin/*" element={<AdminRouter />} />
+                                                {/* Handle non-existent routes */}
+                                <Route path="*" element={<PageNotFound/>} />
+                            </Routes>
                     </CartProvider>
                 </AuthProvider>
             </UserProvider>

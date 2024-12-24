@@ -203,6 +203,23 @@
       },
       "image": "https://www.91-img.com/gallery_images_uploads/f/6/f634a49efc4b4ed609fcffb2fd260cc765f5ee57.jpg?tr=h-630,c-at_max,q-80",
       "rating": 4.6
+    },
+    {
+      "id": "1734927686097",
+      "brand": "poco",
+      "model": "poco X3",
+      "price": 399,
+      "description": "6 GB RAM | 64 GB ROM | Expandable Upto 512 GB 16.94 cm (6.67 inch) Full HD+ Display\n64MP + 13MP + 2MP + 2MP | 20MP Front Camera\n6000 mAh Lithium-ion Polymer Battery\nQualcomm Snapdragon 732G Processor",
+      "specifications": {
+        "display": "(6.67 inch) Full HD+ Display",
+        "processor": "Qualcomm Snapdragon 732G Processor",
+        "ram": "6 GB RAM",
+        "storage": "64 GB ROM",
+        "battery": "6000 mAh Lithium-ion Polymer Battery",
+        "os": "Android 11"
+      },
+      "image": "https://5.imimg.com/data5/ECOM/Default/2024/1/373694487/PH/XT/CA/47699750/j20c-blue-800.png",
+      "rating": 0
     }
   ],
   "users": [
@@ -213,26 +230,7 @@
       "password": "789456",
       "role": "user",
       "confirmPassword": "789456",
-      "cart": [
-        {
-          "id": "2",
-          "brand": "Samsung",
-          "model": "Samsung Galaxy S23 Ultra",
-          "price": 1399,
-          "description": "6.8-inch QHD+ AMOLED display, Snapdragon 8 Gen 2,200 MP quad-camera,S Pen.",
-          "specifications": {
-            "display": "6.8-inch AMOLED",
-            "processor": "Snapdragon 8 Gen 2",
-            "ram": "12GB",
-            "storage": "256GB/512GB/1TB",
-            "battery": "5000mAh",
-            "os": "Android 13"
-          },
-          "image": "https://m.media-amazon.com/images/I/81vxWpPpgNL.jpg",
-          "rating": 4.6,
-          "quantity": 1
-        }
-      ]
+      "cart": []
     },
     {
       "id": "8acb",
@@ -241,6 +239,35 @@
       "password": "14789",
       "role": "admin",
       "confirmPassword": "14789"
+    },
+    {
+      "id": "6d75",
+      "name": "jaguuu",
+      "email": "jagu@gmail.com",
+      "password": "36987",
+      "role": "user",
+      "cart": [],
+      "block": true,
+      "createdAt": "2024-12-23T04:35:42.284Z"
+    },
+    {
+      "id": "c074",
+      "name": "newuser",
+      "email": "newuser@gmail.com",
+      "password": "963852",
+      "role": "user",
+      "cart": [],
+      "createdAt": "2024-12-23T06:45:52.081Z"
+    },
+    {
+      "id": "e55c",
+      "name": "blaa",
+      "email": "blaa@gmail.com",
+      "password": "852",
+      "role": "user",
+      "block": false,
+      "cart": [],
+      "createdAt": "2024-12-23T07:03:36.358Z"
     }
   ]
 }

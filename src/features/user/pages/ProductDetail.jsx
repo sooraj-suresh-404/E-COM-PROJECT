@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom"; // Import useNavigate
-import axios from "axios";
+import { useParams, useNavigate } from "react-router-dom";
 import { useCart } from "../../../contexts/CartContext";
-import { useUser } from "../../../contexts/UserContext"; // Assuming you have a UserContext
+import { useUser } from "../../../contexts/UserContext";
+import { getProductById } from "../../../api/productApi";
 
 const ProductDetails = () => {
   const { id } = useParams(); // Get product ID from URL
@@ -17,7 +17,7 @@ const ProductDetails = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/products/${id}`);
+        const response = await getProductById(id); // Pass the product ID
         setProduct(response.data);
         setLoading(false);
       } catch (err) {

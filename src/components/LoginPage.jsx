@@ -1,7 +1,7 @@
-import axios from "axios";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useUser } from "../contexts/UserContext";
+import { getUserByEmail } from "../api/userApi";
 
 const LoginPage = () => {
   const { handleLogin } = useUser();
@@ -17,14 +17,17 @@ const LoginPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const { data } = await axios.get("http://localhost:3000/users", {
-        params: { email: form.email },
-      });
-
-      const user = data[0];
+      // Use userApi to get the user by email
+      const user = await getUserByEmail(form.email);
 
       if (!user || user.password !== form.password) {
         setMessage("Invalid email or password");
+        return;
+      }
+
+      // Check if the user is blocked
+      if (user.block) {
+        setMessage("Your account is blocked. Please contact support.");
         return;
       }
 
@@ -51,9 +54,7 @@ const LoginPage = () => {
     <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-gray-100 via-white to-gray-200">
       <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-md">
         <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">Login</h2>
-        <p className="text-center text-gray-600 mb-4">
-          Access your account to continue!
-        </p>
+        <p className="text-center text-gray-600 mb-4">Access your account to continue!</p>
         {message && <p className="text-center text-red-500 mb-4">{message}</p>}
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Email Section */}

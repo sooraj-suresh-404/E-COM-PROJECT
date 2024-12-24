@@ -1,26 +1,5 @@
 {
   "orders": [
-    {
-      "id": "e7f5",
-      "email": "sooraj@gmail.com",
-      "items": [
-        {
-          "id": "1",
-          "quantity": 1,
-          "price": 1199
-        }
-      ],
-      "total": 1199,
-      "paymentMethod": "Cash on Delivery",
-      "shippingAddress": {
-        "name": "sooraj",
-        "street": "street",
-        "city": "city",
-        "state": "state",
-        "postalCode": "697345",
-        "country": "India"
-      },
-      "date": "2024-12-22T17:55:57.036Z"
-    }
+
   ]
 }

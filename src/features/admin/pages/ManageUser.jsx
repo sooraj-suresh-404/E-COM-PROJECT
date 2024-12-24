@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import { fetchUsers, updateUser, deleteUser } from '../../../api/adminApi'; // Import the API functions
 
 const ManageUser = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState('');
   const [editMode, setEditMode] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [formData, setFormData] = useState({
@@ -15,19 +15,19 @@ const ManageUser = () => {
   });
 
   useEffect(() => {
-    fetchUsers();
-  }, []);
+    const getUsers = async () => {
+      try {
+        const usersData = await fetchUsers();
+        setUsers(usersData);
+        setLoading(false);
+      } catch (err) {
+        setError('Failed to fetch users');
+        setLoading(false);
+      }
+    };
 
-  const fetchUsers = async () => {
-    try {
-      const response = await axios.get('http://localhost:3000/users');
-      setUsers(response.data);
-      setLoading(false);
-    } catch (err) {
-      setError('Failed to fetch users');
-      setLoading(false);
-    }
-  };
+    getUsers();
+  }, []);
 
   const handleEditClick = (user) => {
     setEditMode(true);
@@ -42,13 +42,9 @@ const ManageUser = () => {
 
   const handleUpdateUser = async () => {
     try {
-      const response = await axios.put(`http://localhost:3000/users/${selectedUser.id}`, {
-        ...selectedUser,
-        ...formData
-      });
-      
+      const response = await updateUser(selectedUser.id, formData);
       setUsers(users.map(user => 
-        user.id === selectedUser.id ? response.data : user
+        user.id === selectedUser.id ? response : user
       ));
       
       setEditMode(false);
@@ -65,7 +61,7 @@ const ManageUser = () => {
     }
 
     try {
-      await axios.delete(`http://localhost:3000/users/${userId}`);
+      await deleteUser(userId);
       setUsers(users.filter(user => user.id !== userId));
     } catch (err) {
       setError('Failed to delete user');

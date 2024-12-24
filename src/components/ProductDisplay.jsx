@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom"; // Import useNavigate
 import { useCart } from "../contexts/CartContext";
 import { FaHeart, FaRegHeart } from "react-icons/fa"; // For Like/Unlike icons
-import { getallProducts } from "../api/productApi";
+import { getAllProducts, getallProducts } from "../api/productApi";
 import axios from "axios";
 import { useUser } from "../contexts/UserContext"; // Import useUser context
 
@@ -18,8 +18,8 @@ const ProductDisplay = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/products");
-        setProducts(response.data);
+        const response = await getAllProducts();
+        setProducts(response.data || []);
       } catch (error) {
         console.error("Failed to fetch products: ", error);
         setError("Error fetching product details");
