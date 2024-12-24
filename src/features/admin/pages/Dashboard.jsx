@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FiUsers, FiShoppingBag, FiDollarSign, FiBox } from 'react-icons/fi';
+import { getAllUsers } from '../../../api/userApi';
+import { getAllProducts } from '../../../api/productApi';
 
 const Dashboard = () => {
     const [data, setData] = useState({
@@ -28,11 +30,11 @@ const Dashboard = () => {
             setLoading(true);
             
             // Fetch users data
-            const usersResponse = await axios.get('http://localhost:3000/users');
+            const usersResponse = await getAllUsers();
             const users = usersResponse.data;
             
             // Fetch products data
-            const productsResponse = await axios.get('http://localhost:3000/products');
+            const productsResponse = await getAllProducts();
             const products = productsResponse.data;
 
             // Calculate statistics

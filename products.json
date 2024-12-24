@@ -4,7 +4,7 @@
       "id": "1",
       "brand": "Apple",
       "model": "iPhone 15 Pro",
-      "price": 1199,
+      "price": "1299",
       "description": "6.1-inch Super Retina XDR display, A17 Bionic chip, Titanium body, 48 MP triple-camera system.",
       "specifications": {
         "display": "6.1-inch OLED",
@@ -171,23 +171,6 @@
       "rating": 4.4
     },
     {
-      "id": "12",
-      "brand": "Poco",
-      "model": "Poco F5 Pro",
-      "price": 599,
-      "description": "6.67-inch AMOLED, Snapdragon 8+ Gen 1, High refresh rate.",
-      "specifications": {
-        "display": "6.67-inch AMOLED",
-        "processor": "Snapdragon 8+ Gen 1",
-        "ram": "12GB",
-        "storage": "256GB/512GB",
-        "battery": "5160mAh",
-        "os": "MIUI (Android 13)"
-      },
-      "image": "https://cdn.dxomark.com/wp-content/uploads/medias/post-154144/POCO-F5-Pro.png",
-      "rating": 4.2
-    },
-    {
       "id": "13",
       "brand": "Sony",
       "model": "Sony Xperia 1 V",
@@ -230,7 +213,8 @@
       "password": "789456",
       "role": "user",
       "confirmPassword": "789456",
-      "cart": []
+      "cart": [],
+      "block": false
     },
     {
       "id": "8acb",
@@ -247,7 +231,7 @@
       "password": "36987",
       "role": "user",
       "cart": [],
-      "block": true,
+      "block": false,
       "createdAt": "2024-12-23T04:35:42.284Z"
     },
     {
@@ -257,17 +241,36 @@
       "password": "963852",
       "role": "user",
       "cart": [],
-      "createdAt": "2024-12-23T06:45:52.081Z"
+      "createdAt": "2024-12-23T06:45:52.081Z",
+      "block": false
     },
     {
-      "id": "e55c",
       "name": "blaa",
       "email": "blaa@gmail.com",
+      "role": "user",
       "password": "852",
+      "id": "e55c",
+      "block": false
+    },
+    {
+      "id": "97cc",
+      "name": "newuser2",
+      "email": "new@gmail.com",
+      "password": "new",
+      "role": "user",
+      "block": true,
+      "cart": [],
+      "createdAt": "2024-12-24T04:55:12.113Z"
+    },
+    {
+      "id": "4d07",
+      "name": "farrrr",
+      "email": "farrr@gmail.com",
+      "password": "farrr",
       "role": "user",
       "block": false,
       "cart": [],
-      "createdAt": "2024-12-23T07:03:36.358Z"
+      "createdAt": "2024-12-24T06:15:04.998Z"
     }
   ]
 }

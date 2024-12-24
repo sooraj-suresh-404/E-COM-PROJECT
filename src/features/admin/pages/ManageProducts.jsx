@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { deleteNewProduct, deleteProduct, getAllProducts, getAllProductsAdmin } from '../../../api/productApi';
 
 const ManageProducts = () => {
     const [products, setProducts] = useState([]);
@@ -30,8 +31,8 @@ const ManageProducts = () => {
 
     const fetchProducts = async () => {
         try {
-            const response = await axios.get('http://localhost:3000/products');
-            setProducts(response.data);
+            const response = await getAllProductsAdmin();
+            setProducts(response);
             setLoading(false);
         } catch (err) {
             setError('Failed to fetch products');
@@ -60,7 +61,7 @@ const ManageProducts = () => {
 
     const handleAddProduct = async () => {
         try {
-            const response = await axios.post('http://localhost:3000/products', {
+            const response = await getAllProductsAdmin({
                 ...newProduct,
                 id: Date.now().toString(),
                 rating: parseFloat(newProduct.rating) || 0,
@@ -91,7 +92,7 @@ const ManageProducts = () => {
 
     const handleDeleteProduct = async (id) => {
         try {
-            await axios.delete(`http://localhost:3000/products/${id}`);
+            await deleteProduct(id);
             setProducts(products.filter(product => product.id !== id));
         } catch (err) {
             setError('Failed to delete product');
@@ -105,7 +106,7 @@ const ManageProducts = () => {
 
     const handleUpdateProduct = async () => {
         try {
-            const response = await axios.put(`http://localhost:3000/products/${newProduct.id}`, newProduct);
+            const response = await deleteNewProduct(newProduct.id, newProduct);
             setProducts(products.map(p => p.id === newProduct.id ? response.data : p));
             setEditMode(false);
             setNewProduct({

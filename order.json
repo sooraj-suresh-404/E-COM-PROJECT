@@ -1,5 +1,182 @@
 {
   "orders": [
-
+    {
+      "id": "13a3",
+      "email": "new@gmail.com",
+      "items": [
+        {
+          "id": "1",
+          "quantity": 1,
+          "price": 1199
+        },
+        {
+          "id": "2",
+          "quantity": 1,
+          "price": 1399
+        },
+        {
+          "id": "3",
+          "quantity": 1,
+          "price": 899
+        }
+      ],
+      "total": 3497,
+      "paymentMethod": "Cash on Delivery",
+      "shippingAddress": {
+        "name": "juju",
+        "street": "jujitsu ",
+        "city": "Jumma ",
+        "state": "jujii",
+        "postalCode": "8486",
+        "country": "India"
+      },
+      "date": "2024-12-24T05:32:13.959Z",
+      "status": "pending",
+      "updatedAt": "2024-12-24T06:19:00.821Z"
+    },
+    {
+      "id": "5cd0",
+      "email": "new@gmail.com",
+      "items": [
+        {
+          "id": "4",
+          "quantity": 1,
+          "price": 999
+        },
+        {
+          "id": "8",
+          "quantity": 1,
+          "price": 1099
+        },
+        {
+          "id": "7",
+          "quantity": 1,
+          "price": 999
+        }
+      ],
+      "total": 3097,
+      "paymentMethod": "Debit Card",
+      "shippingAddress": {
+        "name": "lu",
+        "street": "luuu",
+        "city": "luuuu",
+        "state": "luuuuuuu",
+        "postalCode": "523842",
+        "country": "India"
+      },
+      "date": "2024-12-24T06:08:41.799Z",
+      "status": "shipped",
+      "updatedAt": "2024-12-24T06:09:07.233Z"
+    },
+    {
+      "id": "9a69",
+      "email": "new@gmail.com",
+      "items": [
+        {
+          "id": "3",
+          "brand": "OnePlus",
+          "model": "OnePlus 11 Pro",
+          "price": 899,
+          "description": "6.7-inch Fluid AMOLED, Snapdragon 8 Gen 2, Hasselblad triple camera setup.",
+          "specifications": {
+            "display": "6.7-inch AMOLED",
+            "processor": "Snapdragon 8 Gen 2",
+            "ram": "12GB",
+            "storage": "256GB/512GB",
+            "battery": "5000mAh",
+            "os": "Android 13"
+          },
+          "image": "https://oasis.opstatics.com/content/dam/oasis/page/2023/na/oneplus-11/specs/green-img.png",
+          "rating": 4.5,
+          "quantity": 1
+        }
+      ],
+      "total": 899,
+      "paymentMethod": "Credit Card",
+      "shippingAddress": {
+        "name": "jhsd",
+        "street": "asdasd",
+        "city": "asd",
+        "state": "asd",
+        "postalCode": "asd",
+        "country": "India"
+      },
+      "date": "2024-12-24T06:34:36.523Z",
+      "status": "processing",
+      "updatedAt": "2024-12-24T06:38:53.859Z"
+    },
+    {
+      "id": "71be",
+      "email": "farrr@gmail.com",
+      "items": [
+        {
+          "id": "2",
+          "brand": "Samsung",
+          "model": "Samsung Galaxy S23 Ultra",
+          "price": 1399,
+          "description": "6.8-inch QHD+ AMOLED display, Snapdragon 8 Gen 2,200 MP quad-camera,S Pen.",
+          "specifications": {
+            "display": "6.8-inch AMOLED",
+            "processor": "Snapdragon 8 Gen 2",
+            "ram": "12GB",
+            "storage": "256GB/512GB/1TB",
+            "battery": "5000mAh",
+            "os": "Android 13"
+          },
+          "image": "https://m.media-amazon.com/images/I/81vxWpPpgNL.jpg",
+          "rating": 4.6,
+          "quantity": 1
+        },
+        {
+          "id": "4",
+          "brand": "Google",
+          "model": "Google Pixel 8 Pro",
+          "price": 999,
+          "description": "6.7-inch OLED, Tensor G3 chip, 50 MP triple-camera, AI-powered photography.",
+          "specifications": {
+            "display": "6.7-inch OLED",
+            "processor": "Tensor G3",
+            "ram": "12GB",
+            "storage": "128GB/256GB/512GB",
+            "battery": "4900mAh",
+            "os": "Android 14"
+          },
+          "image": "https://cdn.dxomark.com/wp-content/uploads/medias/post-157488/Google-Pixel-8-Pro-featured-image-packshot-review.jpg",
+          "rating": 4.8,
+          "quantity": 1
+        },
+        {
+          "id": "9",
+          "brand": "Motorola",
+          "model": "Motorola Edge 40 Pro",
+          "price": 799,
+          "description": "6.67-inch pOLED, Snapdragon 8 Gen 2, 125W fast charging.",
+          "specifications": {
+            "display": "6.67-inch pOLED",
+            "processor": "Snapdragon 8 Gen 2",
+            "ram": "12GB",
+            "storage": "256GB/512GB",
+            "battery": "4600mAh",
+            "os": "Android 13"
+          },
+          "image": "https://cdn.dxomark.com/wp-content/uploads/medias/post-144720/Motorola-Edge-40-Pro_featured-image-packshot-review.jpg",
+          "rating": 4.3,
+          "quantity": 1
+        }
+      ],
+      "total": 3197,
+      "paymentMethod": "Debit Card",
+      "shippingAddress": {
+        "name": "farrr",
+        "street": "farr",
+        "city": "gdt",
+        "state": "kdi",
+        "postalCode": "sdvjuy",
+        "country": "India"
+      },
+      "date": "2024-12-24T06:38:07.273Z",
+      "status": "delivered",
+      "updatedAt": "2024-12-24T06:38:58.974Z"
+    }
   ]
 }

@@ -21,6 +21,12 @@ export const checkUser = async (email, password) => {
   return res.data[0] || null; // Returns the first user found or null if no match
 };
 
+// Fetch all users
+export const getAllUsers = async () => {
+  const res = await axios.get(USER_URL);
+  return res;
+};
+
 // Fetch user by ID
 export const getUserById = async (userId) => {
   const res = await axios.get(`${USER_URL}/${userId}`);
