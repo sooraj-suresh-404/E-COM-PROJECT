@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { deleteNewProduct, deleteProduct, getAllProducts, getAllProductsAdmin } from '../../../api/productApi';
+import { addProduct, deleteNewProduct, deleteProduct, getAllProducts } from '../../../api/productApi';
 
 const ManageProducts = () => {
     const [products, setProducts] = useState([]);
@@ -31,8 +31,8 @@ const ManageProducts = () => {
 
     const fetchProducts = async () => {
         try {
-            const response = await getAllProductsAdmin();
-            setProducts(response);
+            const response = await getAllProducts();
+            setProducts(response.data);
             setLoading(false);
         } catch (err) {
             setError('Failed to fetch products');
@@ -61,7 +61,7 @@ const ManageProducts = () => {
 
     const handleAddProduct = async () => {
         try {
-            const response = await getAllProductsAdmin({
+            const response = await addProduct({
                 ...newProduct,
                 id: Date.now().toString(),
                 rating: parseFloat(newProduct.rating) || 0,

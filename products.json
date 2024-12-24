@@ -137,71 +137,20 @@
       "rating": 4.3
     },
     {
-      "id": "10",
-      "brand": "Asus",
-      "model": "Asus ROG Phone 7",
-      "price": 1199,
-      "description": "6.78-inch AMOLED, Snapdragon 8 Gen 2, Gaming-oriented features.",
+      "id": "1735038350669",
+      "brand": "POCO",
+      "model": "POCO X3",
+      "price": 599,
+      "description": "Rocking a Qualcomm Snapdragon 732G processor and an Adreno 618 GPU, this phone can handle almost every smartphone task like a breeze.",
       "specifications": {
-        "display": "6.78-inch AMOLED",
-        "processor": "Snapdragon 8 Gen 2",
-        "ram": "16GB",
-        "storage": "256GB/512GB",
-        "battery": "6000mAh",
-        "os": "Android 13"
-      },
-      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTMmdd7NV13nxRxM-HYK5SrKTcby3ZVgfTdQ&s",
-      "rating": 4.7
-    },
-    {
-      "id": "11",
-      "brand": "Nothing",
-      "model": "Nothing Phone 2",
-      "price": 799,
-      "description": "6.7-inch OLED, Snapdragon 8+ Gen 1, Glyph Interface for notifications.",
-      "specifications": {
-        "display": "6.7-inch OLED",
-        "processor": "Snapdragon 8+ Gen 1",
-        "ram": "8GB/12GB",
-        "storage": "128GB/256GB",
-        "battery": "4700mAh",
-        "os": "Nothing OS 2 (Android 13)"
-      },
-      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRsxhrsiMlsfjnsXCsZhMmgRvivAngTO4BiUQ&s",
-      "rating": 4.4
-    },
-    {
-      "id": "13",
-      "brand": "Sony",
-      "model": "Sony Xperia 1 V",
-      "price": 1399,
-      "description": "6.5-inch 4K OLED, Snapdragon 8 Gen 2, Professional camera features.",
-      "specifications": {
-        "display": "6.5-inch OLED",
-        "processor": "Snapdragon 8 Gen 2",
-        "ram": "12GB",
-        "storage": "256GB/512GB",
-        "battery": "5000mAh",
-        "os": "Android 13"
-      },
-      "image": "https://www.91-img.com/gallery_images_uploads/f/6/f634a49efc4b4ed609fcffb2fd260cc765f5ee57.jpg?tr=h-630,c-at_max,q-80",
-      "rating": 4.6
-    },
-    {
-      "id": "1734927686097",
-      "brand": "poco",
-      "model": "poco X3",
-      "price": 399,
-      "description": "6 GB RAM | 64 GB ROM | Expandable Upto 512 GB 16.94 cm (6.67 inch) Full HD+ Display\n64MP + 13MP + 2MP + 2MP | 20MP Front Camera\n6000 mAh Lithium-ion Polymer Battery\nQualcomm Snapdragon 732G Processor",
-      "specifications": {
-        "display": "(6.67 inch) Full HD+ Display",
+        "display": "16.94 cm (6.67 inch) Full HD+ Display",
         "processor": "Qualcomm Snapdragon 732G Processor",
-        "ram": "6 GB RAM",
-        "storage": "64 GB ROM",
-        "battery": "6000 mAh Lithium-ion Polymer Battery",
-        "os": "Android 11"
+        "ram": "6 GB RAM ",
+        "storage": "64 GB ROM ",
+        "battery": "6000 mAh",
+        "os": "Android 10"
       },
-      "image": "https://5.imimg.com/data5/ECOM/Default/2024/1/373694487/PH/XT/CA/47699750/j20c-blue-800.png",
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRR5xFda9IqqAdgL5U67KGxubd_859zqTNRkg&s",
       "rating": 0
     }
   ],
@@ -213,7 +162,44 @@
       "password": "789456",
       "role": "user",
       "confirmPassword": "789456",
-      "cart": [],
+      "cart": [
+        {
+          "id": "4",
+          "brand": "Google",
+          "model": "Google Pixel 8 Pro",
+          "price": 999,
+          "description": "6.7-inch OLED, Tensor G3 chip, 50 MP triple-camera, AI-powered photography.",
+          "specifications": {
+            "display": "6.7-inch OLED",
+            "processor": "Tensor G3",
+            "ram": "12GB",
+            "storage": "128GB/256GB/512GB",
+            "battery": "4900mAh",
+            "os": "Android 14"
+          },
+          "image": "https://cdn.dxomark.com/wp-content/uploads/medias/post-157488/Google-Pixel-8-Pro-featured-image-packshot-review.jpg",
+          "rating": 4.8,
+          "quantity": 1
+        },
+        {
+          "id": "2",
+          "brand": "Samsung",
+          "model": "Samsung Galaxy S23 Ultra",
+          "price": 1399,
+          "description": "6.8-inch QHD+ AMOLED display, Snapdragon 8 Gen 2,200 MP quad-camera,S Pen.",
+          "specifications": {
+            "display": "6.8-inch AMOLED",
+            "processor": "Snapdragon 8 Gen 2",
+            "ram": "12GB",
+            "storage": "256GB/512GB/1TB",
+            "battery": "5000mAh",
+            "os": "Android 13"
+          },
+          "image": "https://m.media-amazon.com/images/I/81vxWpPpgNL.jpg",
+          "rating": 4.6,
+          "quantity": 1
+        }
+      ],
       "block": false
     },
     {

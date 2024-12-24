@@ -1,24 +1,52 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FiShoppingCart } from "react-icons/fi";
-import { NavLink, useNavigate } from "react-router-dom"; // Import useNavigate
+import { NavLink, useNavigate } from "react-router-dom";
 import { useUser } from "../contexts/UserContext";
 import { useCart } from "../contexts/CartContext";
 
 const Navbar = () => {
   const { email, handleLogout, name } = useUser();
-  const { cart } = useCart(); // Get the cart state from CartContext
+  const { cart } = useCart();
   const [isDropdownOpen, setDropdownOpen] = useState(false);
-  const navigate = useNavigate(); // Initialize navigate
+  const [products, setProducts] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [suggestions, setSuggestions] = useState([]);
+  const [modalOpen, setModalOpen] = useState(false);
+  const navigate = useNavigate();
 
-  const cartCount = cart ? cart.length : 0; // Get the number of items in the cart
+  const cartCount = cart ? cart.length : 0;
 
-  // Handle click on the cart icon
+  // Fetch products from the database
+  useEffect(() => {
+    fetch("http://localhost:3000/products")
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Fetched products:", data);
+        setProducts(data);
+      })
+      .catch((error) => console.error("Error fetching products:", error));
+  }, []);
+
+  // Handle search input
+  const handleSearchInput = (query) => {
+    setSearchQuery(query);
+    if (query.trim()) {
+      const filteredSuggestions = products.filter((product) =>
+        product.model?.toLowerCase().includes(query.toLowerCase())
+      );
+      setSuggestions(filteredSuggestions);
+      setModalOpen(true);
+    } else {
+      setSuggestions([]);
+      setModalOpen(false);
+    }
+  };
+
+  // Handle cart icon click
   const handleCartClick = () => {
     if (!email) {
-      // If the user is not logged in, redirect them to the login page
       navigate("/login");
     } else {
-      // If the user is logged in, navigate to the cart page
       navigate("/cart");
     }
   };
@@ -31,21 +59,48 @@ const Navbar = () => {
           <NavLink to="/">E-Shop</NavLink>
         </div>
 
-        {/* Search Bar - Centered */}
-        <div className="flex-1 mx-4 max-w-3xl flex justify-center">
+        {/* Search Bar */}
+        <div className="flex-1 mx-4 max-w-3xl flex justify-center relative">
           <input
             type="text"
             placeholder="Search Mobile..."
+            value={searchQuery}
+            onChange={(e) => handleSearchInput(e.target.value)}
             className="w-full rounded-lg py-2 px-4 text-gray-700 focus:outline-none focus:ring focus:ring-blue-300"
           />
+
+          {/* Search Modal */}
+          {modalOpen && (
+            <div className="absolute top-14 w-full bg-white shadow-lg rounded-md p-4 z-10">
+              {suggestions.length > 0 ? (
+                <ul>
+                  {suggestions.map((suggestion) => (
+                    <li
+                      key={suggestion.id}
+                      className="py-2 px-4 hover:bg-gray-100 cursor-pointer transition"
+                      onClick={() => {
+                        setSearchQuery(""); // Clear search
+                        setModalOpen(false); // Close modal
+                        navigate(`/product/${suggestion.id}`); // Navigate to product page
+                      }}
+                    >
+                      <span className="text-black">{suggestion.model}</span>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-gray-500">No results found</p>
+              )}
+            </div>
+          )}
         </div>
 
-        {/* Icons and Profile - Aligned to the right */}
+        {/* Icons and Profile */}
         <div className="flex items-center space-x-4 ml-auto">
           {/* Cart Icon */}
           <div
             className="relative hover:text-gray-300"
-            onClick={handleCartClick} // Add onClick handler to the Cart icon
+            onClick={handleCartClick}
           >
             <FiShoppingCart className="h-6 w-6" />
             {cartCount > 0 && (
@@ -55,7 +110,7 @@ const Navbar = () => {
             )}
           </div>
 
-          {/* Profile Icon or Login Button */}
+          {/* Profile or Login */}
           {email ? (
             <div
               className="relative group cursor-pointer"
@@ -67,12 +122,14 @@ const Navbar = () => {
                   alt="Profile"
                   className="rounded-full w-8 h-8"
                 />
-                <span className="hidden sm:inline">{name || email.split("@")[0]}</span>
+                <span className="hidden sm:inline">
+                  {name || email.split("@")[0]}
+                </span>
               </div>
 
-              {/* Profile Dropdown Menu */}
+              {/* Dropdown Menu */}
               {isDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-40 bg-white text-gray-700 rounded-md shadow-lg opacity-100 z-10">
+                <div className="absolute right-0 mt-2 w-40 bg-white text-gray-700 rounded-md shadow-lg z-10">
                   <NavLink
                     to="/profile"
                     className="block px-4 py-2 hover:bg-gray-100"
