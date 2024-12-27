@@ -1,5 +1,5 @@
 // CartApi.js
-const API_URL = "http://localhost:3000/users";
+const API_URL = "https://e-com-app-server.onrender.com/users";
 
 export const fetchCart = async (email) => {
   try {

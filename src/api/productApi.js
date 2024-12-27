@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const PRODUCT_URL = "http://localhost:3000/products";
+const PRODUCT_URL = "https://e-com-app-server.onrender.com/products";
 // products
 
 export const getAllProducts = () => {

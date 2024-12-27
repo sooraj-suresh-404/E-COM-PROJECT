@@ -1,7 +1,7 @@
 import axios from "axios";
 
-const USER_URL = "http://localhost:3000/users";
-const ORDER_URL = "http://localhost:5001/orders";
+const USER_URL = "https://e-com-app-server.onrender.com/users";
+const ORDER_URL = "https://e-com-app-server.onrender.com/orders";
 
 // Check if a username already exists
 export const checkUsername = async (username) => {

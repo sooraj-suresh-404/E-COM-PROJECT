@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-const BASE_URL = 'http://localhost:3000';
-const API_BASE_URL = 'http://localhost:5001';
+const BASE_URL = 'https://e-com-app-server.onrender.com';
+const API_BASE_URL = 'https://e-com-app-server.onrender.com';
 
 // Fetch all users
 export const fetchUsers = async () => {
